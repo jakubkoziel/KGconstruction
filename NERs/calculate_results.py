@@ -26,6 +26,10 @@ for combination in product(datasets, splits, models, prediction_levels):
     docred_type, split, model_name, prediction_level = combination
 
     dataset_true = dr_loader.load_docs(docred_type=docred_type, split=split)
+    if not ner_loader.check_if_exists(docred_type=docred_type, split=split, model_name=model_name,
+                                      prediction_level=prediction_level):
+        print(f"Predictions for {docred_type} - {split} - {model_name} - {prediction_level} do not exist.")
+        continue
     dataset_predicted = ner_loader.load_docs(docred_type=docred_type, split=split, model_name=model_name,
                                              prediction_level=prediction_level)
 
