@@ -33,6 +33,9 @@ def predict(docred_type, split, model_name, prediction_level):
         from flair_predict_NER_pretrained_models import predict_flair
         dataset_predicted = predict_flair(dataset=dataset, prediction_level=prediction_level)
     elif model_name in ('urchade/gliner_large-v2.1'):
+        if prediction_level == 'document':
+            print('Document level not supported for GLiNER')
+            return
         from gliner_predict_NER_pretrained_models import predict_gliner
         dataset_predicted = predict_gliner(dataset=dataset, prediction_level=prediction_level)
     else:
