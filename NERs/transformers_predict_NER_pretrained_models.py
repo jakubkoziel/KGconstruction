@@ -56,7 +56,7 @@ def _ner_with_transformer_per_document(document_sents, model, tokenizer, device)
     predictions = []
     all_sentences, sent_positions = get_all_sentences_with_position(document_sents)
 
-    results = _predict_on_tokens(model=model, tokenizer=tokenizer, tokens=all, device=device)
+    results = _predict_on_tokens(model=model, tokenizer=tokenizer, tokens=all_sentences, device=device)
     # print(results)
     name, start, e_type = None, None, None
     for j in range(len(results)):

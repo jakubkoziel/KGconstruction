@@ -4,7 +4,7 @@
 - NERs/understand_entity_groups - shows entities are not grouped by name or type
 - NERs/predict_NER_pretrained - used to run pretrained NER models no training, no OpenAI or deepseek. You need to use correct environment for each model:
   - (Spacy models) KGconstruction_environments\spacy -> check KG_constructions_environments_spacy_requirements.txt
-  - (Hugging face models)
+  - (Huggingface transformers) (D:\Masters\Masters_thesis\masters_llama_transformers) -> check transformers_requirements.txt
 - NERs/calculate_results - used to calculate results for NERs
 
 

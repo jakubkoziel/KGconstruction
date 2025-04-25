@@ -45,12 +45,17 @@ prediction_levels = ['sentence', 'document']
 
 env_name = sys.executable
 print(f"Environment path: {env_name}")
-# KGconstruction_environments\spacy env expected
-models = ['en_core_web_sm', 'en_core_web_lg', 'en_core_web_trf']
+# Env:: KGconstruction_environments\spacy
+# models = ['en_core_web_sm', 'en_core_web_lg', 'en_core_web_trf']
 
-predict(docred_type='docred', split='dev', model_name="xlm-roberta-large-finetuned-conll03-english",
-        prediction_level='sentence')
-# for combination in product(datasets, splits, models, prediction_levels):
-#     docred_type, split, model_name, prediction_level = combination
-#
-#     predict(docred_type=docred_type, split=split, model_name=model_name, prediction_level=prediction_level)
+# Env:: D:\Masters\Masters_thesis\masters_llama_transformers
+models = ["xlm-roberta-large-finetuned-conll03-english", "Babelscape/wikineural-multilingual-ner",
+          "dslim/bert-base-NER",
+          "dslim/bert-large-NER",
+          "dslim/bert-base-NER-uncased"]
+# predict(docred_type='docred', split='dev', model_name="xlm-roberta-large-finetuned-conll03-english",
+#         prediction_level='sentence')
+for combination in product(datasets, splits, models, prediction_levels):
+    docred_type, split, model_name, prediction_level = combination
+
+    predict(docred_type=docred_type, split=split, model_name=model_name, prediction_level=prediction_level)
