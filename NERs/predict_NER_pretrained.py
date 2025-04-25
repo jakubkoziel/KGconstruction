@@ -29,6 +29,12 @@ def predict(docred_type, split, model_name, prediction_level):
         from transformers_predict_NER_pretrained_models import predict_transformers
         dataset_predicted = predict_transformers(dataset=dataset, model_name=model_name,
                                                  prediction_level=prediction_level)
+    elif model_name in ('flair'):
+        from flair_predict_NER_pretrained_models import predict_flair
+        dataset_predicted = predict_flair(dataset=dataset, prediction_level=prediction_level)
+    elif model_name in ('urchade/gliner_large-v2.1'):
+        from gliner_predict_NER_pretrained_models import predict_gliner
+        dataset_predicted = predict_gliner(dataset=dataset, prediction_level=prediction_level)
     else:
         raise Exception('Such model not supported')
 
@@ -39,23 +45,24 @@ def predict(docred_type, split, model_name, prediction_level):
                          prediction_level=prediction_level, model_name=model_name)
 
 
-datasets = ['docred', 'redocred']
-splits = ['dev', 'test']
-prediction_levels = ['sentence', 'document']
+if __name__ == '__main__':
+    datasets = ['docred', 'redocred']
+    splits = ['dev', 'test']
+    prediction_levels = ['sentence', 'document']
 
-env_name = sys.executable
-print(f"Environment path: {env_name}")
-# Env:: KGconstruction_environments\spacy
-# models = ['en_core_web_sm', 'en_core_web_lg', 'en_core_web_trf']
+    # Env:: KGconstruction_environments\spacy
+    # models = ['en_core_web_sm', 'en_core_web_lg', 'en_core_web_trf']
 
-# Env:: D:\Masters\Masters_thesis\masters_llama_transformers
-models = ["xlm-roberta-large-finetuned-conll03-english", "Babelscape/wikineural-multilingual-ner",
-          "dslim/bert-base-NER",
-          "dslim/bert-large-NER",
-          "dslim/bert-base-NER-uncased"]
-# predict(docred_type='docred', split='dev', model_name="xlm-roberta-large-finetuned-conll03-english",
-#         prediction_level='sentence')
-for combination in product(datasets, splits, models, prediction_levels):
-    docred_type, split, model_name, prediction_level = combination
+    # Env:: D:\Masters\Masters_thesis\masters_llama_transformers
+    # models = ["xlm-roberta-large-finetuned-conll03-english", "Babelscape/wikineural-multilingual-ner",
+    #           "dslim/bert-base-NER",
+    #           "dslim/bert-large-NER",
+    #           "dslim/bert-base-NER-uncased"]
 
-    predict(docred_type=docred_type, split=split, model_name=model_name, prediction_level=prediction_level)
+    # Env:: D:\Masters\Masters_thesis\masters_flair_ner
+    models = ['flair', "urchade/gliner_large-v2.1"]
+
+    for combination in product(datasets, splits, models, prediction_levels):
+        docred_type, split, model_name, prediction_level = combination
+
+        predict(docred_type=docred_type, split=split, model_name=model_name, prediction_level=prediction_level)

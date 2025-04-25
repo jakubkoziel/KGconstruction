@@ -13,13 +13,15 @@ results_pretrained_models = pd.DataFrame(
 datasets = ['docred', 'redocred']
 splits = ['dev', 'test']
 prediction_levels = ['sentence', 'document']
-# models_spacy = ['en_core_web_sm', 'en_core_web_lg', 'en_core_web_trf']
+
+models_spacy = ['en_core_web_sm', 'en_core_web_lg', 'en_core_web_trf']
 models_transformers = ["xlm-roberta-large-finetuned-conll03-english", "Babelscape/wikineural-multilingual-ner",
                        "dslim/bert-base-NER",
                        "dslim/bert-large-NER",
                        "dslim/bert-base-NER-uncased"]
+models_flair_gliner = ["flair", "urchade/gliner_large-v2.1"]
+models = models_flair_gliner + models_transformers + models_spacy
 
-models = models_transformers  # + models_spacy
 for combination in product(datasets, splits, models, prediction_levels):
     docred_type, split, model_name, prediction_level = combination
 
