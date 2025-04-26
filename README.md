@@ -12,6 +12,8 @@
       transformers_requirements.txt
     - (Flair & Gliner) (D:\Masters\Masters_thesis\masters_flair_ner) -> check flair_gliner_requirements.txt
 - NERs/calculate_results - used to calculate results for NERs
+- NERs/fine-tuning - used to finetune models -> check readme in the folder for more details
+- 
 
 ### Environment for spacy models (KGconstruction_environments\spacy)
 
