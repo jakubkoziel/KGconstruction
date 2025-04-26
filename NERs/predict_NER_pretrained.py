@@ -25,7 +25,8 @@ def predict(docred_type, split, model_name, prediction_level):
             "xlm-roberta-large-finetuned-conll03-english", "Babelscape/wikineural-multilingual-ner",
             "dslim/bert-base-NER",
             "dslim/bert-large-NER",
-            "dslim/bert-base-NER-uncased"):
+            "dslim/bert-base-NER-uncased",
+            'wikineural-multilingual-ner-fine-tuned'):
         from transformers_predict_NER_pretrained_models import predict_transformers
         dataset_predicted = predict_transformers(dataset=dataset, model_name=model_name,
                                                  prediction_level=prediction_level)
@@ -63,7 +64,10 @@ if __name__ == '__main__':
     #           "dslim/bert-base-NER-uncased"]
 
     # Env:: D:\Masters\Masters_thesis\masters_flair_ner
-    models = ['flair', "urchade/gliner_large-v2.1"]
+    # models = ['flair', "urchade/gliner_large-v2.1"]
+
+    # Env:: KGconstruction_environments\transformers but D:\Masters\Masters_thesis\masters_llama_transformers will work as well
+    models = ['wikineural-multilingual-ner-fine-tuned']
 
     for combination in product(datasets, splits, models, prediction_levels):
         docred_type, split, model_name, prediction_level = combination

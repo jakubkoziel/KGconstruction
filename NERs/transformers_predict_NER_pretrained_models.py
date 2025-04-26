@@ -123,8 +123,13 @@ def _ner_with_transformer_per_sentence(document_sents, model, tokenizer, device)
 def predict_transformers(dataset, model_name, prediction_level):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForTokenClassification.from_pretrained(model_name)
+    if model_name == 'wikineural-multilingual-ner-fine-tuned':
+        model_name_tmp = r'D:\masters_fine-tune\test-ner\checkpoint-8500'
+        tokenizer = AutoTokenizer.from_pretrained(model_name_tmp)
+        model = AutoModelForTokenClassification.from_pretrained(model_name_tmp)
+    else:
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForTokenClassification.from_pretrained(model_name)
     model.to(device)
 
     dataset_predicted = []

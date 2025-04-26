@@ -20,7 +20,8 @@ models_transformers = ["xlm-roberta-large-finetuned-conll03-english", "Babelscap
                        "dslim/bert-large-NER",
                        "dslim/bert-base-NER-uncased"]
 models_flair_gliner = ["flair", "urchade/gliner_large-v2.1"]
-models = models_flair_gliner + models_transformers + models_spacy
+models_fine_tuned = ['wikineural-multilingual-ner-fine-tuned']
+models = models_flair_gliner + models_transformers + models_spacy + models_fine_tuned
 
 for combination in product(datasets, splits, models, prediction_levels):
     docred_type, split, model_name, prediction_level = combination
