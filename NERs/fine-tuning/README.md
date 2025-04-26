@@ -1,6 +1,7 @@
 # Fine-tuning models
 
 ## First step is to prepare data according to transformer requirements.
+
 Use: prepare_set_for_run_ner.py
 BIO tagging doesn't support nested entities which were found in the dataset. Some of overlapping/nested entities were of
 different entity type.
@@ -27,10 +28,16 @@ We decide to finetune wikineural-multilingual-ner on our dataset.
 
 Sample commands to use for run_ner or run_ner_no_trainer (can be tailored to needs) I have used first option. 3 epochs,
 batch size 8
-The files for finetuning are from https://github.com/huggingface/transformers/blob/main/examples/pytorch/token-classification/README.md
+The files for finetuning are
+from https://github.com/huggingface/transformers/blob/main/examples/pytorch/token-classification/README.md
 
 ```
 python run_ner.py --model_name_or_path Babelscape/wikineural-multilingual-ner --train_file tagged_redocred_train.json --validation_file tagged_redocred_dev.json --output_dir /masters_fine-tune/test-ner --do_train --do_eval --ignore_mismatched_sizes
 
 python run_ner_no_trainer.py --model_name_or_path Babelscape/wikineural-multilingual-ner --train_file tagged_redocred_train.json --validation_file tagged_redocred_dev.json --task_name ner --max_length 128 --per_device_train_batch_size 2 --learning_rate 2e-5 --num_train_epochs 3 --output_dir /tmp/ner/ --ignore_mismatched_sizes
 ```
+
+## Reevaluation and eval metrics (with visualization)
+
+Use eval_all_checkpoints to recalculate them on validation set and save.
+Use visualize_eval_results to generate dataframe and plot. (matplotlib to install for visualization)
