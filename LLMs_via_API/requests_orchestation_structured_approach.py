@@ -5,27 +5,74 @@ import multiprocessing
 import time
 import NER_predefined_messages
 from data_utlis import DocREDLoader, LLM_API_Response_Loader
+from data_utlis import PredictedNERLoader
+import os
 
 
-def construct_messages(model, experiment_type, dataset, split, experiment, doc_sents):
-    print(experiment)
+def _ner_basic_messages(model, experiment, doc_sents):
+    if experiment in ('v3', 'v4', 'v5'):
+        system_msg = NER_predefined_messages.experiment_prompts['system_' + experiment](docred_type='redocred',
+                                                                                        split='train')
+    elif experiment in ('v1', 'v2'):
+        system_msg = NER_predefined_messages.experiment_prompts['system_' + experiment]
+    else:
+        raise Exception('Experiment not defined')
+
+    system_role = 'system' if model != 'o1-mini' else 'user'
+
+    messages = [
+        {"role": system_role, "content": system_msg},
+        {"role": "user", "content": f"Text to analyze: {json.dumps(doc_sents, ensure_ascii=False)}"}
+    ]
+
+    return messages
+
+
+def _ner_refine_messages(model, experiment_type, dataset, split, experiment, doc_sents, doc_title, document_id):
+    experiment_base = experiment.split('_refined_')[0]
+    experiment_refine = experiment.split('_refined_')[1]
+    messages_base = _ner_basic_messages(model=model, experiment=experiment_base,
+                                        doc_sents=doc_sents)
+    # Load previous response
+    llm_api_loader = LLM_API_Response_Loader()
+    previous_response = llm_api_loader.read_single_response(experiment_type=experiment_type, dataset=dataset,
+                                                            split=split, experiment=experiment_base,
+                                                            model=model, document_id=document_id)
+
+    # Load fine-tuned model response
+    predicted_ner_loader = PredictedNERLoader(os.path.join('..', 'NERs'))
+    other_model_predictions = predicted_ner_loader.load_docs(docred_type=dataset, split=split,
+                                                             model_name='wikineural-multilingual-ner-fine-tuned',
+                                                             prediction_level='sentence')
+    compare_response = other_model_predictions[document_id]
+    if compare_response['title'] != doc_title:
+        for candidate in other_model_predictions:
+            if candidate['title'] == doc_title:
+                compare_response = candidate
+                break
+    if compare_response['title'] != doc_title:
+        raise Exception('Title not found in other model predictions')
+    compare_response = [entity[0] for entity in compare_response['vertexSet']]
+
+    messages_continuation = [
+        {"role": "assistant", "content": '$$$' + json.dumps(previous_response, ensure_ascii=False) + '$$$'},
+        {'role': 'user',
+         'content': NER_predefined_messages.experiment_prompts['refine_' + experiment_refine](
+             other_prediction=json.dumps(compare_response, ensure_ascii=False))
+         }]
+    return messages_base + messages_continuation
+
+
+def construct_messages(model, experiment_type, dataset, split, experiment, doc_sents, doc_title, document_id):
     if experiment_type == 'ner':
-        if experiment in ('v3', 'v4', 'v5'):
-            system_msg = NER_predefined_messages.experiment_prompts['system_' + experiment](docred_type='redocred',
-                                                                                            split='train')
-        elif experiment in ('v1', 'v2'):
-            system_msg = NER_predefined_messages.experiment_prompts['system_' + experiment]
+        if '_refined_' not in experiment:
+            return _ner_basic_messages(model=model, experiment=experiment,
+                                       doc_sents=doc_sents)
+
         else:
-            raise Exception('Experiment not defined')
-
-        system_role = 'system' if model != 'o1-mini' else 'user'
-
-        messages = [
-            {"role": system_role, "content": system_msg},
-            {"role": "user", "content": f"Text to analyze: {json.dumps(doc_sents, ensure_ascii=False)}"}
-        ]
-
-        return messages
+            return _ner_refine_messages(model=model, experiment_type=experiment_type, dataset=dataset,
+                                        split=split, experiment=experiment,
+                                        doc_sents=doc_sents, doc_title=doc_title, document_id=document_id)
 
 
 def single_process_for_requests(process_id, model, docs, document_subset, experiment_type, dataset, split,
@@ -50,9 +97,10 @@ def single_process_for_requests(process_id, model, docs, document_subset, experi
 
         print(f'Process {process_id} starting to analyze document {i}')
         messages = construct_messages(model=model, experiment_type=experiment_type, dataset=dataset, split=split,
-                                      experiment=experiment, doc_sents=docs[i]['sents'])
-        if model == "deepseek-chat":
-            print(messages)
+                                      experiment=experiment,
+                                      doc_sents=docs[i]['sents'], doc_title=docs[i]['title'], document_id=i)
+        # if model == "deepseek-chat":
+        #     print(messages)
         try:
             response = request_handler.send_request(model=model, messages=messages, process_id=process_id)
 
@@ -75,9 +123,9 @@ def main():
     dataset = 'docred'
     split = 'dev'
     models = ['deepseek-chat']  # , 'gpt-4o-mini', 'deepseek-reasoner']
-    experiments = ['v5']
-    num_processes = 2
-    number_of_docs = 2  # len(dev_true)):
+    experiments = ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
+    num_processes = 10
+    number_of_docs = 20  # len(dev_true)):
 
     # Logic
     timestamp = int(time.time())
@@ -106,7 +154,7 @@ def main():
             for process in processes:
                 process.join()
 
-            print('Processes have finished', experiment, model, (int(time.time())) - timestamp / 60, 'minutes')
+            print('Processes have finished', experiment, model, (int(time.time()) - timestamp) / 60, 'minutes')
 
 
 if __name__ == '__main__':

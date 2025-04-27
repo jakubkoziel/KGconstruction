@@ -37,6 +37,13 @@ class DataLoader:
         f.write(txt)
         f.close()
 
+    # def _read_txt(self, file_path):
+    #     if self.path_prefix is not None:
+    #         file_path = os.path.join(self.path_prefix, file_path)
+    #     with open(file_path, 'r', encoding='utf-8') as f:
+    #         data = f.read()
+    #     return data
+
     def _list_directory(self, path):
         if self.path_prefix is not None:
             path = os.path.join(self.path_prefix, path)
@@ -130,6 +137,13 @@ class LLM_API_Response_Loader(DataLoader):
         except Exception as e:
             file_path = os.path.join(txt_path, f"doc_{document_id}.txt")
             self._save_txt(response, file_path)
+
+    def read_single_response(self, experiment_type, dataset, split, experiment, model, document_id):
+        json_path = os.path.join(experiment_type, dataset, split, experiment, model)
+
+        # Save raw response
+        file_path = os.path.join(json_path, f"doc_{document_id}.json")
+        return self._load_json(file_path)
 
     def check_if_document_done(self, experiment_type, dataset, split, experiment, model, doc_id):
         path = os.path.join(experiment_type, dataset, split, experiment, model, 'doc_' + str(doc_id) + '.json')
