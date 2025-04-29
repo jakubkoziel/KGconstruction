@@ -63,9 +63,40 @@ def _ner_refine_messages(model, experiment_type, dataset, split, experiment, doc
     return messages_base + messages_continuation
 
 
+def _ner_verifier_messages(model, dataset, split, experiment, doc_sents, doc_title, document_id):
+    experiment_base = experiment.split('_')[0]
+    messages_base = _ner_basic_messages(model=model, experiment=experiment_base,
+                                        doc_sents=doc_sents)
+    # Load fine-tuned model response
+    predicted_ner_loader = PredictedNERLoader(os.path.join('..', 'NERs'))
+    other_model_predictions = predicted_ner_loader.load_docs(docred_type=dataset, split=split,
+                                                             model_name='wikineural-multilingual-ner-fine-tuned',
+                                                             prediction_level='sentence')
+    compare_response = other_model_predictions[document_id]
+    if compare_response['title'] != doc_title:
+        for candidate in other_model_predictions:
+            if candidate['title'] == doc_title:
+                compare_response = candidate
+                break
+    if compare_response['title'] != doc_title:
+        raise Exception('Title not found in other model predictions')
+    compare_response = [entity[0] for entity in compare_response['vertexSet']]
+
+    messages_continuation = [
+        {"role": "assistant", "content": '$$$' + json.dumps(compare_response, ensure_ascii=False) + '$$$'},
+        {'role': 'user',
+         'content': NER_predefined_messages.experiment_prompts['verifier']()
+         }]
+    return messages_base + messages_continuation
+
+
 def construct_messages(model, experiment_type, dataset, split, experiment, doc_sents, doc_title, document_id):
     if experiment_type == 'ner':
-        if '_refined_' not in experiment:
+        if 'verifier' in experiment:
+            return _ner_verifier_messages(model=model, dataset=dataset, split=split,
+                                          experiment=experiment,
+                                          doc_sents=doc_sents, doc_title=doc_title, document_id=document_id)
+        elif '_refined_' not in experiment:
             return _ner_basic_messages(model=model, experiment=experiment,
                                        doc_sents=doc_sents)
 
@@ -122,16 +153,15 @@ def main():
     experiment_type = 'ner'
     dataset = 'docred'
     split = 'dev'
-    models = ['deepseek-chat']  # , 'gpt-4o-mini', 'deepseek-reasoner']
-    experiments = ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
+    models = ['deepseek-reasoner']  # ['deepseek-reasoner']  #   # , 'gpt-4o-mini', 'deepseek-reasoner']
+    experiments = ['v2_verifier']  # ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
     num_processes = 10
-    number_of_docs = 20  # len(dev_true)):
+    dr_loader = DocREDLoader('..')
+    docs = dr_loader.load_docs(docred_type=dataset, split=split)
+    number_of_docs = len(docs)
 
     # Logic
     timestamp = int(time.time())
-    dr_loader = DocREDLoader('..')
-    docs = dr_loader.load_docs(docred_type=dataset, split=split)
-
     processes = []
 
     processes_subsets = [[] for _ in range(num_processes)]

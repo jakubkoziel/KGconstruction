@@ -144,6 +144,25 @@ def refine_instructions_v2(other_prediction):
     return refine_instructions
 
 
+def verifier():
+    refine_instructions = f"""
+    Please carefully review your previous Named Entity Recognition (NER) extraction and identify potential errors. Specifically:
+    1. ASSESS COMPLETENESS: Could any entities be missing?
+    2. HAVE YOU TAGGED ANYTHING INCORRECTLY: Are there any entities that should not have been tagged?
+    3. EVALUATE CONSISTENCY: Are similar mentions treated identically throughout the text?
+
+    Verification of entity types has secondary importance. The main focus is on the presence or absence of entities.
+
+    For any identified issues:
+    - Explain the potential error
+    - Correct any issues while keeping the rest of the response unchanged
+    - Provide response in the same format as previously
+    - Do not include any comments within json structure
+    """
+
+    return refine_instructions
+
+
 experiment_prompts = {
     'system_v1': system_msg_gpt_v1,
     'system_v2': system_msg_gpt_v2,
@@ -152,4 +171,5 @@ experiment_prompts = {
     'system_v5': system_msg_gpt_v5,
     'refine_v1': refine_instructions_v1,
     'refine_v2': refine_instructions_v2,
+    'verifier': verifier
 }
