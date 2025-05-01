@@ -151,10 +151,10 @@ def single_process_for_requests(process_id, model, docs, document_subset, experi
 def main():
     # Settings
     experiment_type = 'ner'
-    dataset = 'docred'
+    dataset = 'redocred'  # 'docred'
     split = 'dev'
     models = ['deepseek-reasoner']  # ['deepseek-reasoner']  #   # , 'gpt-4o-mini', 'deepseek-reasoner']
-    experiments = ['v2_verifier']  # ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
+    experiments = ['v2']  # ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
     num_processes = 10
     dr_loader = DocREDLoader('..')
     docs = dr_loader.load_docs(docred_type=dataset, split=split)

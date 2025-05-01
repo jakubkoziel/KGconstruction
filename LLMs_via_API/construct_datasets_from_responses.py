@@ -32,6 +32,43 @@ def get_basic_ner_experiment_conducted():
             'narrow_docs_to': None}
     )
 
+    # After filling responses with fill_redocred_predictions_from_docred.py (and calculating only 2 missing docs)
+    basic_ner_experiments_conducted.append(
+        {
+            'experiment_type': 'ner',
+            'dataset': 'redocred',
+            'split': 'dev',
+            'experiment': 'v2',
+            'model': 'deepseek-reasoner',
+            'narrow_docs_to': None})
+    basic_ner_experiments_conducted.append(
+        {
+            'experiment_type': 'ner',
+            'dataset': 'redocred',
+            'split': 'dev',
+            'experiment': 'v4',
+            'model': 'deepseek-chat',
+            'narrow_docs_to': None}
+    )
+
+    basic_ner_experiments_conducted.append(
+        {
+            'experiment_type': 'ner',
+            'dataset': 'redocred',
+            'split': 'test',
+            'experiment': 'v2',
+            'model': 'deepseek-reasoner',
+            'narrow_docs_to': None})
+    basic_ner_experiments_conducted.append(
+        {
+            'experiment_type': 'ner',
+            'dataset': 'redocred',
+            'split': 'test',
+            'experiment': 'v4',
+            'model': 'deepseek-chat',
+            'narrow_docs_to': None}
+    )
+
     return basic_ner_experiments_conducted
 
 
@@ -86,6 +123,44 @@ def get_refinement_ner_experiment_conducted():
         'experiment': 'v2_verifier',
         'model': 'deepseek-reasoner',
         'narrow_docs_to': None})
+    refinement_ner_experiments_conducted.append({
+        'experiment_type': 'ner',
+        'dataset': 'docred',
+        'split': 'dev',
+        'experiment': 'v4_verifier',
+        'model': 'deepseek-chat',
+        'narrow_docs_to': None})
+
+    # After filling responses with fill_redocred_predictions_from_docred.py (and calculating only 2 missing docs)
+    refinement_ner_experiments_conducted.append({
+        'experiment_type': 'ner',
+        'dataset': 'redocred',
+        'split': 'dev',
+        'experiment': 'v2_verifier',
+        'model': 'deepseek-reasoner',
+        'narrow_docs_to': None})
+    refinement_ner_experiments_conducted.append({
+        'experiment_type': 'ner',
+        'dataset': 'redocred',
+        'split': 'dev',
+        'experiment': 'v4_verifier',
+        'model': 'deepseek-chat',
+        'narrow_docs_to': None})
+
+    refinement_ner_experiments_conducted.append({
+        'experiment_type': 'ner',
+        'dataset': 'redocred',
+        'split': 'test',
+        'experiment': 'v2_verifier',
+        'model': 'deepseek-reasoner',
+        'narrow_docs_to': None})
+    refinement_ner_experiments_conducted.append({
+        'experiment_type': 'ner',
+        'dataset': 'redocred',
+        'split': 'test',
+        'experiment': 'v4_verifier',
+        'model': 'deepseek-chat',
+        'narrow_docs_to': None})
 
     return refinement_ner_experiments_conducted
 
@@ -109,14 +184,16 @@ def save_ner_datasets_constructed_from_responses(what_to_save):
                                                               experiment=experiment['experiment'],
                                                               model=experiment['model'], docs_starting=docs,
                                                               narrow_docs_to=experiment['narrow_docs_to'])
-        print(predicted)
+        # print(predicted)
         predicted_NER_loader.save_docs(docs=predicted, docred_type=experiment['dataset'],
                                        split=experiment['split'],
                                        model_name=os.path.join(experiment['experiment'], experiment['model']),
                                        prediction_level=str(experiment['narrow_docs_to']))
+        print(f'DONE - {what_to_save} - {experiment}')
 
 
 if __name__ == '__main__':
+    save_ner_datasets_constructed_from_responses(what_to_save='basic')
     save_ner_datasets_constructed_from_responses(what_to_save='refinement')
 
     pass
