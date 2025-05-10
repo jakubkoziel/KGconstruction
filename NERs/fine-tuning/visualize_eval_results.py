@@ -16,6 +16,7 @@ for f in os.listdir(r"D:\masters_fine-tune\eval-checkpoints"):
 
 df = pd.DataFrame(all_results)
 df.sort_values(by='step', inplace=True)
+df[['eval_accuracy', 'eval_f1', 'eval_loss', 'eval_precision', 'eval_recall', 'step']].to_csv('tmp_remove.csv')
 print(df)
 
 ### PLOT
@@ -74,8 +75,8 @@ ax1.legend(handles=legend_elements,
            loc='lower right',
            fontsize=14)
 
-plt.title('Babelscape/wikineural-multilingual-ner fine-tuning on ReDocRED', fontsize=16, pad=20)
+#plt.title('Babelscape/wikineural-multilingual-ner fine-tuning on ReDocRED', fontsize=16, pad=20)
 plt.xticks(df['step'][::2])
 fig.tight_layout()
 plt.savefig('training_metrics_babel.png', dpi=300, bbox_inches='tight')
-plt.savefig('training_metrics_babel.svg', format='svg', bbox_inches='tight')
+plt.savefig('training_metrics_babel.pdf', format='pdf', bbox_inches='tight')

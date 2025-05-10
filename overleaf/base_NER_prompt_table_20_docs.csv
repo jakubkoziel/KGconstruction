@@ -1,0 +1,16 @@
+model,prompt_version,F1,Precision,Recall
+deepseek-reasoner,NER-prompt-v2,77.497,79.505,75.589
+deepseek-reasoner,NER-prompt-v3,77.076,79.817,74.518
+deepseek-reasoner,NER-prompt-v1,73.695,71.894,75.589
+deepseek-reasoner,NER-prompt-v4,71.622,75.534,68.094
+deepseek-chat,NER-prompt-v4,55.038,55.702,54.390
+deepseek-chat,NER-prompt-v1,47.427,49.649,45.396
+deepseek-reasoner,NER-prompt-v5,47.321,49.417,45.396
+deepseek-chat,NER-prompt-v2,46.569,49.052,44.325
+deepseek-chat,NER-prompt-v5,46.452,46.652,46.253
+deepseek-chat,NER-prompt-v3,41.196,42.661,39.829
+gpt-4o-mini,NER-prompt-v4,21.026,25.301,17.987
+gpt-4o-mini,NER-prompt-v1,20.581,23.677,18.201
+gpt-4o-mini,NER-prompt-v3,20.308,25.402,16.916
+gpt-4o-mini,NER-prompt-v2,18.158,24.113,14.561
+gpt-4o-mini,NER-prompt-v5,15.588,17.711,13.919
