@@ -15,7 +15,6 @@ from model import DocREModel
 from utils import set_seed, collate_fn, create_directory
 from prepro import read_docred
 from evaluation import to_official, official_evaluate, merge_results
-import wandb
 from tqdm import tqdm
 
 import pandas as pd
@@ -35,92 +34,92 @@ def load_input(batch, device, tag="dev"):
             } 
 
     return input
-
-def train(args, model, train_features, dev_features):
-
-    def finetune(features, optimizer, num_epoch, num_steps):
-        best_score = -1
-        train_dataloader = DataLoader(features, batch_size=args.train_batch_size, shuffle=True, collate_fn=collate_fn, drop_last=True)
-        train_iterator = range(int(num_epoch))
-        total_steps = int(len(train_dataloader) * num_epoch // args.gradient_accumulation_steps)
-        warmup_steps = int(total_steps * args.warmup_ratio)
-        scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=warmup_steps, num_training_steps=total_steps)
-        scaler = GradScaler()
-        print("Total steps: {}".format(total_steps))
-        print("Warmup steps: {}".format(warmup_steps))
-        for epoch in tqdm(train_iterator, desc='Train epoch'):
-            for step, batch in enumerate(train_dataloader):
-                model.zero_grad()
-                optimizer.zero_grad()
-                model.train()
-
-                inputs = load_input(batch, args.device)  
-                outputs = model(**inputs)
-                loss = [outputs["loss"]["rel_loss"]]
-
-                if inputs["sent_labels"] != None:
-                    loss.append(outputs["loss"]["evi_loss"] * args.evi_lambda)
-                                
-                if inputs["teacher_attns"] != None:
-                    loss.append(outputs["loss"]["attn_loss"] * args.attn_lambda)
-                
-                loss = sum(loss) / args.gradient_accumulation_steps
-                scaler.scale(loss).backward()
-
-                if step % args.gradient_accumulation_steps == 0:
-                    if args.max_grad_norm > 0:
-                        scaler.unscale_(optimizer)
-                        torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
-                    scaler.step(optimizer)
-                    scaler.update()
-                    scheduler.step()
-                    model.zero_grad()
-                    num_steps += 1
-                    
-                wandb.log(outputs["loss"], step=num_steps)
-                
-                if (step + 1) == len(train_dataloader) or (args.evaluation_steps > 0 and num_steps % args.evaluation_steps == 0 and step % args.gradient_accumulation_steps == 0):
-                    
-                    dev_scores, dev_output, official_results, results = evaluate(args, model, dev_features, tag="dev")
-                    wandb.log(dev_scores, step=num_steps)
-                    
-                    print(dev_output)
-                    if dev_scores["dev_F1_ign"] > best_score:
-                        best_score = dev_scores["dev_F1_ign"]
-                        best_offi_results = official_results
-                        best_results = results
-                        best_output = dev_output
-
-                        ckpt_file = os.path.join(args.save_path, "best.ckpt")
-                        print(f"saving model checkpoint into {ckpt_file} ...")
-                        torch.save(model.state_dict(), ckpt_file)
-                        
-                    if epoch == train_iterator[-1]: # last epoch
-
-                        ckpt_file = os.path.join(args.save_path, "last.ckpt")
-                        print(f"saving model checkpoint into {ckpt_file} ...")
-                        torch.save(model.state_dict(), ckpt_file)
-                        
-                        pred_file = os.path.join(args.save_path, args.pred_file)
-                        score_file = os.path.join(args.save_path, "scores.csv")
-                        results_file = os.path.join(args.save_path, f"topk_{args.pred_file}")
-
-                        dump_to_file(best_offi_results, pred_file, best_output, score_file, best_results, results_file)
-                     
-
-        return num_steps
-
-    new_layer = ["extractor", "bilinear"]
-    optimizer_grouped_parameters = [
-        {"params": [p for n, p in model.named_parameters() if not any(nd in n for nd in new_layer)], },
-        {"params": [p for n, p in model.named_parameters() if any(nd in n for nd in new_layer)], "lr": args.lr_added},
-    ]
-
-    optimizer = AdamW(optimizer_grouped_parameters, lr=args.lr_transformer, eps=args.adam_epsilon)
-    num_steps = 0
-    set_seed(args)
-    model.zero_grad()
-    finetune(train_features, optimizer, args.num_train_epochs, num_steps)
+#
+# def train(args, model, train_features, dev_features):
+#
+#     def finetune(features, optimizer, num_epoch, num_steps):
+#         best_score = -1
+#         train_dataloader = DataLoader(features, batch_size=args.train_batch_size, shuffle=True, collate_fn=collate_fn, drop_last=True)
+#         train_iterator = range(int(num_epoch))
+#         total_steps = int(len(train_dataloader) * num_epoch // args.gradient_accumulation_steps)
+#         warmup_steps = int(total_steps * args.warmup_ratio)
+#         scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=warmup_steps, num_training_steps=total_steps)
+#         scaler = GradScaler()
+#         print("Total steps: {}".format(total_steps))
+#         print("Warmup steps: {}".format(warmup_steps))
+#         for epoch in tqdm(train_iterator, desc='Train epoch'):
+#             for step, batch in enumerate(train_dataloader):
+#                 model.zero_grad()
+#                 optimizer.zero_grad()
+#                 model.train()
+#
+#                 inputs = load_input(batch, args.device)
+#                 outputs = model(**inputs)
+#                 loss = [outputs["loss"]["rel_loss"]]
+#
+#                 if inputs["sent_labels"] != None:
+#                     loss.append(outputs["loss"]["evi_loss"] * args.evi_lambda)
+#
+#                 if inputs["teacher_attns"] != None:
+#                     loss.append(outputs["loss"]["attn_loss"] * args.attn_lambda)
+#
+#                 loss = sum(loss) / args.gradient_accumulation_steps
+#                 scaler.scale(loss).backward()
+#
+#                 if step % args.gradient_accumulation_steps == 0:
+#                     if args.max_grad_norm > 0:
+#                         scaler.unscale_(optimizer)
+#                         torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
+#                     scaler.step(optimizer)
+#                     scaler.update()
+#                     scheduler.step()
+#                     model.zero_grad()
+#                     num_steps += 1
+#
+#                 # wandb.log(outputs["loss"], step=num_steps)
+#
+#                 if (step + 1) == len(train_dataloader) or (args.evaluation_steps > 0 and num_steps % args.evaluation_steps == 0 and step % args.gradient_accumulation_steps == 0):
+#
+#                     dev_scores, dev_output, official_results, results = evaluate(args, model, dev_features, tag="dev")
+#                     # wandb.log(dev_scores, step=num_steps)
+#
+#                     print(dev_output)
+#                     if dev_scores["dev_F1_ign"] > best_score:
+#                         best_score = dev_scores["dev_F1_ign"]
+#                         best_offi_results = official_results
+#                         best_results = results
+#                         best_output = dev_output
+#
+#                         ckpt_file = os.path.join(args.save_path, "best.ckpt")
+#                         print(f"saving model checkpoint into {ckpt_file} ...")
+#                         torch.save(model.state_dict(), ckpt_file)
+#
+#                     if epoch == train_iterator[-1]: # last epoch
+#
+#                         ckpt_file = os.path.join(args.save_path, "last.ckpt")
+#                         print(f"saving model checkpoint into {ckpt_file} ...")
+#                         torch.save(model.state_dict(), ckpt_file)
+#
+#                         pred_file = os.path.join(args.save_path, args.pred_file)
+#                         score_file = os.path.join(args.save_path, "scores.csv")
+#                         results_file = os.path.join(args.save_path, f"topk_{args.pred_file}")
+#
+#                         dump_to_file(best_offi_results, pred_file, best_output, score_file, best_results, results_file)
+#
+#
+#         return num_steps
+#
+#     new_layer = ["extractor", "bilinear"]
+#     optimizer_grouped_parameters = [
+#         {"params": [p for n, p in model.named_parameters() if not any(nd in n for nd in new_layer)], },
+#         {"params": [p for n, p in model.named_parameters() if any(nd in n for nd in new_layer)], "lr": args.lr_added},
+#     ]
+#
+#     optimizer = AdamW(optimizer_grouped_parameters, lr=args.lr_transformer, eps=args.adam_epsilon)
+#     num_steps = 0
+#     set_seed(args)
+#     model.zero_grad()
+#     finetune(train_features, optimizer, args.num_train_epochs, num_steps)
 
 def evaluate(args, model, features, tag="dev"):
     
@@ -169,19 +168,19 @@ def evaluate(args, model, features, tag="dev"):
     
     official_results, results = to_official(preds, features, evi_preds = evi_preds, scores = scores, topks = topks)
     
-    if len(official_results) > 0:
-        if tag == "dev":
-            best_re, best_evi, best_re_ign, _ = official_evaluate(official_results, args.data_dir, args.train_file, args.dev_file)
-        else:
-            best_re, best_evi, best_re_ign, _ = official_evaluate(official_results, args.data_dir, args.train_file, args.test_file)
-    else:
-        best_re = best_evi = best_re_ign = [-1, -1, -1]
-    output = {
-        tag + "_rel": [i * 100 for i in best_re],
-        tag + "_rel_ign": [i * 100 for i in best_re_ign], 
-        tag + "_evi": [i * 100 for i in best_evi],
-    }
-    scores = {"dev_F1": best_re[-1] * 100, "dev_evi_F1": best_evi[-1] * 100, "dev_F1_ign": best_re_ign[-1] * 100}
+    # if len(official_results) > 0:
+    #     if tag == "dev":
+    #         best_re, best_evi, best_re_ign, _ = official_evaluate(official_results, args.data_dir, args.train_file, args.dev_file)
+    #     else:
+    #         best_re, best_evi, best_re_ign, _ = official_evaluate(official_results, args.data_dir, args.train_file, args.test_file)
+    # else:
+    #     best_re = best_evi = best_re_ign = [-1, -1, -1]
+    # output = {
+    #     tag + "_rel": [i * 100 for i in best_re],
+    #     tag + "_rel_ign": [i * 100 for i in best_re_ign],
+    #     tag + "_evi": [i * 100 for i in best_evi],
+    # }
+    # scores = {"dev_F1": best_re[-1] * 100, "dev_evi_F1": best_evi[-1] * 100, "dev_F1_ign": best_re_ign[-1] * 100}
 
     if args.save_attn:
         
@@ -190,9 +189,9 @@ def evaluate(args, model, features, tag="dev"):
         with open(attns_path, "wb") as f:
             pickle.dump(attns, f)
 
-    return scores, output, official_results, results
+    return official_results, results # scores, output,
 
-def dump_to_file(offi:list, offi_path: str, scores: list, score_path: str, results: list = [], res_path: str = "", thresh: float = None):
+def dump_to_file(offi:list, offi_path: str):
     '''
     dump scores and (top-k) predictions to file.
     
@@ -200,33 +199,33 @@ def dump_to_file(offi:list, offi_path: str, scores: list, score_path: str, resul
     print(f"saving official predictions into {offi_path} ...")
     json.dump(offi, open(offi_path, "w"))
     
-    print(f"saving evaluations into {score_path} ...")
-    headers = ["precision", "recall", "F1"]
-    scores_pd = pd.DataFrame.from_dict(scores, orient="index", columns = headers)
-    print(scores_pd)
-    scores_pd.to_csv(score_path, sep='\t')
-
-    if len(results) != 0:
-        assert res_path != ""
-        print(f"saving topk results into {res_path} ...")
-        json.dump(results, open(res_path, "w"))
-    
-    if thresh != None:
-        thresh_path = os.path.join(os.path.dirname(offi_path), "thresh")
-        if not os.path.exists(thresh_path):
-            print(f"saving threshold into {thresh_path} ...")
-            json.dump(thresh, open(thresh_path, "w"))        
+    # print(f"saving evaluations into {score_path} ...")
+    # headers = ["precision", "recall", "F1"]
+    # scores_pd = pd.DataFrame.from_dict(scores, orient="index", columns = headers)
+    # print(scores_pd)
+    # scores_pd.to_csv(score_path, sep='\t')
+    #
+    # if len(results) != 0:
+    #     assert res_path != ""
+    #     print(f"saving topk results into {res_path} ...")
+    #     json.dump(results, open(res_path, "w"))
+    #
+    # if thresh != None:
+    #     thresh_path = os.path.join(os.path.dirname(offi_path), "thresh")
+    #     if not os.path.exists(thresh_path):
+    #         print(f"saving threshold into {thresh_path} ...")
+    #         json.dump(thresh, open(thresh_path, "w"))
 
     return
 
 
-def main():
+def main(my_args):
     
     parser = argparse.ArgumentParser()
     parser = add_args(parser)
-    args = parser.parse_args()
+    args = parser.parse_args(my_args)
         
-    wandb.init(project="DocRED", name=args.display_name)
+    # wandb.init(project="DocRED", name=args.display_name)
 
     # create directory to save checkpoints and predicted files
     time = str(datetime.datetime.now()).replace(' ','_')
@@ -269,17 +268,17 @@ def main():
         model.load_state_dict(torch.load(model_path))
 
     if args.do_train:  # Training
-        
-        create_directory(save_path_)
-        args.save_path = save_path_
-
-        train_file = os.path.join(args.data_dir, args.train_file)
-        dev_file = os.path.join(args.data_dir, args.dev_file)
-
-        train_features = read(train_file, tokenizer, transformer_type=args.transformer_type, max_seq_length=args.max_seq_length, teacher_sig_path=args.teacher_sig_path)
-        dev_features = read(dev_file, tokenizer, transformer_type=args.transformer_type, max_seq_length=args.max_seq_length)
-
-        train(args, model, train_features, dev_features)
+        pass
+        # create_directory(save_path_)
+        # args.save_path = save_path_
+        #
+        # train_file = os.path.join(args.data_dir, args.train_file)
+        # dev_file = os.path.join(args.data_dir, args.dev_file)
+        #
+        # train_features = read(train_file, tokenizer, transformer_type=args.transformer_type, max_seq_length=args.max_seq_length, teacher_sig_path=args.teacher_sig_path)
+        # dev_features = read(dev_file, tokenizer, transformer_type=args.transformer_type, max_seq_length=args.max_seq_length)
+        #
+        # train(args, model, train_features, dev_features)
 
     else:  # Testing
 
@@ -290,14 +289,14 @@ def main():
         
         if args.eval_mode != "fushion":
 
-            test_scores, test_output, official_results, results = evaluate(args, model, test_features, tag="test")   
-            wandb.log(test_scores)
+            official_results, results = evaluate(args, model, test_features, tag="test")   # test_scores, test_output,
+            # wandb.log(test_scores)
 
             offi_path = os.path.join(args.load_path, args.pred_file)
-            score_path = os.path.join(args.load_path, f"{basename}_scores.csv")
-            res_path = os.path.join(args.load_path, f"topk_{args.pred_file}")
+            #score_path = os.path.join(args.load_path, f"{basename}_scores.csv")
+            #res_path = os.path.join(args.load_path, f"topk_{args.pred_file}")
 
-            dump_to_file(official_results, offi_path, test_output, score_path, results, res_path)          
+            dump_to_file(official_results, offi_path)
 
         else: # inference stage fusion
 
@@ -325,7 +324,7 @@ def main():
                 tag + "_evi": [i * 100 for i in merged_evi],
             }
             
-            wandb.log({"dev_F1": merged_re[-1] * 100, "dev_evi_F1": merged_evi[-1] * 100, "dev_F1_ign": merged_re_ign[-1] * 100})
+            # wandb.log({"dev_F1": merged_re[-1] * 100, "dev_evi_F1": merged_evi[-1] * 100, "dev_F1_ign": merged_re_ign[-1] * 100})
 
             offi_path = os.path.join(args.load_path, f"fused_{args.pred_file}")
             score_path = os.path.join(args.load_path, f"{basename}_fused_scores.csv")

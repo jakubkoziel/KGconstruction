@@ -45,5 +45,18 @@ which are predictions from fine-tuned wikineural model.
 - fill_redocred_predictions_from_docred -> my approach was to calculate first results on docred dev set and then fill
   responses for redocred using this script. Only 2 documents are missing with such approach and need to be filled by
   querying API.
-- 
+-
+
+## RE extraction DREEAM.
+
+https://github.com/YoumiMa/dreeam code & model checkpoints
+to run dreeam use (D:\Masters\Masters_thesis\masters_env) requirements.txt in dreeam dir
+
+Check dreeam\run_overlay.py to conduct dreeam experiments. Required changes to do on code level of unzipped dreeam
+repository are commited. No further changes should be required.
+
+After this evaluate_relation_extraction.py script can be used to evaluate results of dreeam on various NERs of previous
+experiments.
+
+
 

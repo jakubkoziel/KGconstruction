@@ -91,6 +91,71 @@ class DocREDLoader(DataLoader):
         path = os.path.join('data', 'DocRED', 'rel2id.json')
         return self._load_json(path)
 
+    def get_dreeam_RE_results(self, docred_type: str, split: str):
+        if docred_type == 'docred':
+            folder = 'DocRED'
+            if split == 'train':
+                f_name = 'train_annotated.json'
+            elif split == 'train_distant':
+                f_name = 'train_distant.json'
+            elif split == 'dev':
+                f_name = 'dev.json'
+            elif split == 'test':
+                f_name = 'test.json'
+            else:
+                raise ValueError(f"Unknown split: {split}")
+        elif docred_type == 'redocred':
+            folder = 'Re-DocRED'
+            if split == 'train':
+                f_name = 'train_revised.json'
+            elif split == 'dev':
+                f_name = 'dev_revised.json'
+            elif split == 'test':
+                f_name = 'test_revised.json'
+            else:
+                raise ValueError(f"Unknown split: {split}")
+        else:
+            raise ValueError(f"Unknown docred_type: {docred_type}")
+
+        path = os.path.join('dreeam', 'official_model_checkpoints', 'roberta_student', 'data', folder,
+                            f_name.strip('.json'),
+                            'results.json')
+
+        return self._load_json(path)
+
+    def return_path_to_read_from(self, docred_type: str, split: str):
+        if docred_type == 'docred':
+            folder = 'DocRED'
+            if split == 'train':
+                f_name = 'train_annotated.json'
+            elif split == 'train_distant':
+                f_name = 'train_distant.json'
+            elif split == 'dev':
+                f_name = 'dev.json'
+            elif split == 'test':
+                f_name = 'test.json'
+            else:
+                raise ValueError(f"Unknown split: {split}")
+        elif docred_type == 'redocred':
+            folder = 'Re-DocRED'
+            if split == 'train':
+                f_name = 'train_revised.json'
+            elif split == 'dev':
+                f_name = 'dev_revised.json'
+            elif split == 'test':
+                f_name = 'test_revised.json'
+            else:
+                raise ValueError(f"Unknown split: {split}")
+        else:
+            raise ValueError(f"Unknown docred_type: {docred_type}")
+
+        path = os.path.join('data', folder, f_name)
+
+        if self.path_prefix is not None:
+            path = os.path.join(self.path_prefix, path)
+
+        return path
+
 
 class PredictedNERLoader(DataLoader):
     def save_docs(self, docs, docred_type: str, split: str, model_name: str, prediction_level: str):
@@ -109,11 +174,27 @@ class PredictedNERLoader(DataLoader):
 
         return self._load_json(path)
 
+    def get_dreeam_RE_results(self, docred_type: str, split: str, model_name: str, prediction_level: str):
+        model_name.replace('/', '--')
+        path = os.path.join('..', 'dreeam', 'official_model_checkpoints', 'roberta_student', 'NERs', 'data', model_name,
+                            prediction_level, docred_type, split, 'results.json')
+
+        return self._load_json(path)
+
     def check_if_exists(self, docred_type: str, split: str, model_name: str, prediction_level: str):
         model_name.replace('/', '--')
         path = os.path.join('data', model_name, prediction_level, docred_type, f'{split}.json')
 
         return self._path_exists(path)
+
+    def return_path_to_read_from(self, docred_type: str, split: str, model_name: str, prediction_level: str):
+        model_name.replace('/', '--')
+        path = os.path.join('data', model_name, prediction_level, docred_type, f'{split}.json')
+
+        if self.path_prefix is not None:
+            path = os.path.join(self.path_prefix, path)
+
+        return path
 
 
 class LLM_API_Response_Loader(DataLoader):

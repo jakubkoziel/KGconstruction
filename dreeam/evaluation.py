@@ -4,8 +4,16 @@ import json
 import numpy as np
 from tqdm import tqdm
 
-rel2id = json.load(open('meta/rel2id.json', 'r'))
+try:
+    rel2id = json.load(open('../data/DocRED/rel2id.json', 'r'))
+except Exception as e:
+    try:
+        rel2id = json.load(open('data/DocRED/rel2id.json', 'r'))
+    except Exception as e:
+        raise Exception('Please check the path of rel2id.json file.')
+
 id2rel = {value: key for key, value in rel2id.items()}
+
 
 def get_title2pred(pred: list) -> dict:
     '''
@@ -15,14 +23,14 @@ def get_title2pred(pred: list) -> dict:
     Output:
         :title2pred: dictionary with (key, value) = (title, {rel_triple: score})
     '''
-    
+
     title2pred = {}
 
     for p in pred:
         if p["r"] == "Na":
             continue
         curr = (p["h_idx"], p["t_idx"], p["r"])
-        
+
         if p["title"] in title2pred:
             if curr in title2pred[p["title"]]:
                 title2pred[p["title"]][curr] = max(p["score"], title2pred[p["title"]][curr])
@@ -45,13 +53,14 @@ def get_title2gt(features: dict) -> dict:
     for f in features:
         title = f["title"]
         title2gt[title] = []
-        for idx, p in enumerate(f["hts"]): 
-            h,t = p
+        for idx, p in enumerate(f["hts"]):
+            h, t = p
             label = np.array(f['labels'][idx])
-            rs = np.nonzero(label[1:])[0] + 1 # + 1 for no-label
-            title2gt[title].extend([(h,t,id2rel[r]) for r in rs])
-            
+            rs = np.nonzero(label[1:])[0] + 1  # + 1 for no-label
+            title2gt[title].extend([(h, t, id2rel[r]) for r in rs])
+
     return title2gt
+
 
 def select_thresh(cand: list, num_gt: int, correct: int, num_pred: int):
     '''
@@ -65,11 +74,11 @@ def select_thresh(cand: list, num_gt: int, correct: int, num_pred: int):
         :thresh: threshold for selecting relations.
         :sorted_pred: predictions selected from cand. 
     '''
-    
-    sorted_pred = sorted(cand, key=lambda x:x[1], reverse=True)
+
+    sorted_pred = sorted(cand, key=lambda x: x[1], reverse=True)
     precs, recalls = [], []
-    
-    for pred in sorted_pred:     
+
+    for pred in sorted_pred:
         correct += pred[0]
         num_pred += 1
         precs.append(correct / num_pred)  # Precision
@@ -98,7 +107,7 @@ def merge_results(pred: list, pred_pseudo: list, features: list, thresh: float =
         :merged_res: list of merged relation predictions. Each relation prediction is a dictionay with keys (title, h_idx, t_idx, r).
         :thresh: threshold of selecting relation predictions.
     '''
-    
+
     title2pred = get_title2pred(pred)
     title2pred_pseudo = get_title2pred(pred_pseudo)
 
@@ -116,30 +125,30 @@ def merge_results(pred: list, pred_pseudo: list, features: list, thresh: float =
 
         union = set(rels.keys()) | set(rels_pseudo.keys())
         for r in union:
-            if r in rels and r in rels_pseudo: # add those into predictions
+            if r in rels and r in rels_pseudo:  # add those into predictions
                 if rels[r] > 0 and rels_pseudo[r] > 0:
-                    merged_res.append({'title':t, 'h_idx':r[0], 't_idx':r[1], 'r': r[2]})
+                    merged_res.append({'title': t, 'h_idx': r[0], 't_idx': r[1], 'r': r[2]})
                     num_pred += 1
                     correct += r in title2gt[t]
                     continue
                 score = rels[r] + rels_pseudo[r]
-            elif r in rels: # -10 for penalty
+            elif r in rels:  # -10 for penalty
                 score = rels[r] - 10
             elif r in rels_pseudo:
                 score = rels_pseudo[r] - 10
             cand.append((r in title2gt[t], score, t, r[0], r[1], r[2]))
-    
+
     if thresh != None:
-        sorted_pred = sorted(cand, key=lambda x:x[1], reverse=True)
+        sorted_pred = sorted(cand, key=lambda x: x[1], reverse=True)
         last = min(filter(lambda x: x[1] > thresh, sorted_pred))
         until = sorted_pred.index(last)
         cand = sorted_pred[:until + 1]
-        merged_res.extend([{'title':r[2], 'h_idx':r[3], 't_idx':r[4], 'r': r[5]} for r in cand])
+        merged_res.extend([{'title': r[2], 'h_idx': r[3], 't_idx': r[4], 'r': r[5]} for r in cand])
         return merged_res, thresh
 
     if cand != []:
         thresh, cand = select_thresh(cand, num_gt, correct, num_pred)
-        merged_res.extend([{'title':r[2], 'h_idx':r[3], 't_idx':r[4], 'r': r[5]} for r in cand])
+        merged_res.extend([{'title': r[2], 'h_idx': r[3], 't_idx': r[4], 'r': r[5]} for r in cand])
 
     return merged_res, thresh
 
@@ -153,14 +162,15 @@ def extract_relative_score(scores: list, topks: list) -> list:
     Output:
         :scores: a list containing relative scores of topk predictions.
     '''
-    
+
     na_score = scores[-1].item() - 1
     if 0 in topks:
-        na_score = scores[np.where(topks==0)].item()     
-    
+        na_score = scores[np.where(topks == 0)].item()
+
     scores -= na_score
 
     return scores
+
 
 def to_official(preds: list, features: list, evi_preds: list = [], scores: list = [], topks: list = []):
     '''
@@ -175,8 +185,7 @@ def to_official(preds: list, features: list, evi_preds: list = [], scores: list 
         :official_res: official results used for evaluation.
         :res: topk results to be dumped into file, which can be further used during fushion.
     '''
-    
-    
+
     h_idx, t_idx, title, sents = [], [], [], []
 
     for f in features:
@@ -193,24 +202,24 @@ def to_official(preds: list, features: list, evi_preds: list = [], scores: list 
     official_res = []
     res = []
 
-    for i in tqdm(range(preds.shape[0]), desc="preds"): # for each entity pair
+    for i in tqdm(range(preds.shape[0]), desc="preds"):  # for each entity pair
         if scores != []:
-            score = extract_relative_score(scores[i], topks[i]) 
+            score = extract_relative_score(scores[i], topks[i])
             pred = topks[i]
         else:
             pred = preds[i]
             pred = np.nonzero(pred)[0].tolist()
-        
-        for p in pred: # for each predicted relation label (topk)
+
+        for p in pred:  # for each predicted relation label (topk)
             curr_result = {
-                    'title': title[i],
-                    'h_idx': h_idx[i],
-                    't_idx': t_idx[i],
-                    'r': id2rel[p],
-                }
+                'title': title[i],
+                'h_idx': h_idx[i],
+                't_idx': t_idx[i],
+                'r': id2rel[p],
+            }
             if evi_preds != []:
                 curr_evi = evi_preds[i]
-                evis = np.nonzero(curr_evi)[0].tolist() 
+                evis = np.nonzero(curr_evi)[0].tolist()
                 curr_result["evidence"] = [evi for evi in evis if evi < sents[i]]
             if scores != []:
                 curr_result["score"] = score[np.where(topks[i] == p)].item()
@@ -222,16 +231,15 @@ def to_official(preds: list, features: list, evi_preds: list = [], scores: list 
 
 
 def gen_train_facts(data_file_name, truth_dir):
-    
     fact_file_name = data_file_name[data_file_name.find("train_"):]
-    fact_file_name = os.path.join(truth_dir, fact_file_name.replace(".json", ".fact"))
+    fact_file_name = os.path.join(truth_dir, fact_file_name.replace(".json", ".fact"))  #
 
-    if os.path.exists(fact_file_name):
-        fact_in_train = set([])
-        triples = json.load(open(fact_file_name))
-        for x in triples:
-            fact_in_train.add(tuple(x))
-        return fact_in_train
+    # if os.path.exists(fact_file_name):
+    #     fact_in_train = set([])
+    #     triples = json.load(open(fact_file_name))
+    #     for x in triples:
+    #         fact_in_train.add(tuple(x))
+    #     return fact_in_train
 
     fact_in_train = set([])
     ori_data = json.load(open(data_file_name))
@@ -248,20 +256,21 @@ def gen_train_facts(data_file_name, truth_dir):
     return fact_in_train
 
 
-def official_evaluate(tmp, path, train_file = "train_annotated.json", dev_file = "dev.json"):
+def official_evaluate(predicted_triplets, truth, docred_dir='data/DocRED/', train_file="train_annotated.json"):
     '''
         Adapted from the official evaluation code
     '''
-    truth_dir = os.path.join(path, 'ref')
+    tmp = predicted_triplets
+    truth_dir = docred_dir
 
-    if not os.path.exists(truth_dir):
-        os.makedirs(truth_dir)
+    # if not os.path.exists(truth_dir):
+    #     os.makedirs(truth_dir)
 
-    fact_in_train_annotated = gen_train_facts(os.path.join(path, train_file), truth_dir)
-    fact_in_train_distant = gen_train_facts(os.path.join(path, "train_distant.json"), truth_dir)
+    fact_in_train_annotated = gen_train_facts(os.path.join(docred_dir, 'train_annotated.json'), truth_dir)
+    fact_in_train_distant = gen_train_facts(os.path.join(docred_dir, "train_distant.json"), truth_dir)
 
-    truth = json.load(open(os.path.join(path, dev_file)))
-        
+    # truth = truth#json.load(open(os.path.join(path, dev_file)))
+
     std = {}
     tot_evidences = 0
     titleset = set([])
@@ -275,9 +284,9 @@ def official_evaluate(tmp, path, train_file = "train_annotated.json", dev_file =
         vertexSet = x['vertexSet']
         title2vectexSet[title] = vertexSet
 
-        if 'labels' not in x: # official test set from DocRED
+        if 'labels' not in x:  # official test set from DocRED
             continue
-        
+
         for label in x['labels']:
             r = label['r']
             h_idx = label['h']
@@ -312,7 +321,7 @@ def official_evaluate(tmp, path, train_file = "train_annotated.json", dev_file =
             continue
         vertexSet = title2vectexSet[title]
 
-        if 'evidence' in x : #and (title, h_idx, t_idx) in std:
+        if 'evidence' in x:  # and (title, h_idx, t_idx) in std:
             evi = set(x['evidence'])
         else:
             evi = set([])
@@ -350,8 +359,10 @@ def official_evaluate(tmp, path, train_file = "train_annotated.json", dev_file =
     else:
         evi_f1 = 2.0 * evi_p * evi_r / (evi_p + evi_r)
 
-    re_p_ignore_train_annotated = 1.0 * (correct_re - correct_in_train_annotated) / (len(submission_answer) - correct_in_train_annotated + 1e-5)
-    re_p_ignore_train = 1.0 * (correct_re - correct_in_train_distant) / (len(submission_answer) - correct_in_train_distant + 1e-5)
+    re_p_ignore_train_annotated = 1.0 * (correct_re - correct_in_train_annotated) / (
+            len(submission_answer) - correct_in_train_annotated + 1e-5)
+    re_p_ignore_train = 1.0 * (correct_re - correct_in_train_distant) / (
+            len(submission_answer) - correct_in_train_distant + 1e-5)
 
     if re_p_ignore_train_annotated + re_r == 0:
         re_f1_ignore_train_annotated = 0
@@ -363,6 +374,6 @@ def official_evaluate(tmp, path, train_file = "train_annotated.json", dev_file =
     else:
         re_f1_ignore_train = 2.0 * re_p_ignore_train * re_r / (re_p_ignore_train + re_r)
 
-    return [re_p, re_r, re_f1], [evi_p, evi_r, evi_f1],\
+    return [re_p, re_r, re_f1], [evi_p, evi_r, evi_f1], \
         [re_p_ignore_train_annotated, re_r, re_f1_ignore_train_annotated], \
         [re_p_ignore_train, re_r, re_f1_ignore_train]
