@@ -1,0 +1,97 @@
+precision,recall,f1-score,metric_type,docred_type,split,model_name,prediction_level
+0.6822319622387053,0.6593890020366598,0.670616015576453,re,docred,dev,original_NER,original_NER
+0.6082875457875457,0.5462301485326617,0.5755909989439194,evi,docred,dev,original_NER,original_NER
+0.6456433869295579,0.6593890020366598,0.6524438047339081,re_ignore_train_annotated (used officially),docred,dev,original_NER,original_NER
+0.5485029933550862,0.6593890020366598,0.5988562599675664,re_ignore_train,docred,dev,original_NER,original_NER
+0.5932788016162412,0.4904276985743381,0.5369726161805369,re,docred,dev,xlm-roberta-large-finetuned-conll03-english,sentence
+0.5135552836628244,0.40987819293827416,0.4558966443720346,evi,docred,dev,xlm-roberta-large-finetuned-conll03-english,sentence
+0.5452842655957644,0.4904276985743381,0.516403240855115,re_ignore_train_annotated (used officially),docred,dev,xlm-roberta-large-finetuned-conll03-english,sentence
+0.4219078296373332,0.4904276985743381,0.45359471269329926,re_ignore_train,docred,dev,xlm-roberta-large-finetuned-conll03-english,sentence
+0.6403141361256545,0.5978004073319756,0.6183273646513588,re,docred,dev,wikineural-multilingual-ner-fine-tuned,sentence
+0.5568061906436862,0.48815336382792823,0.5202245652471588,evi,docred,dev,wikineural-multilingual-ner-fine-tuned,sentence
+0.6002715277344147,0.5978004073319756,0.5990334190902076,re_ignore_train_annotated (used officially),docred,dev,wikineural-multilingual-ner-fine-tuned,sentence
+0.4960264084900032,0.5978004073319756,0.5421786790259134,re_ignore_train,docred,dev,wikineural-multilingual-ner-fine-tuned,sentence
+0.5675,0.44382892057026474,0.4981028571428572,re,docred,dev,v2\deepseek-reasoner-repaired,None
+0.48715456186640743,0.36059001901629234,0.41442452523701234,evi,docred,dev,v2\deepseek-reasoner-repaired,None
+0.5281281957857391,0.44382892057026474,0.48232285789952817,re_ignore_train_annotated (used officially),docred,dev,v2\deepseek-reasoner-repaired,None
+0.4265985355246533,0.44382892057026474,0.435043187603944,re_ignore_train,docred,dev,v2\deepseek-reasoner-repaired,None
+0.6391827800072966,0.5709164969450102,0.603124058694436,re,docred,dev,v2_verifier\deepseek-reasoner-repaired,None
+0.5553030768285943,0.464717068407257,0.5059876888640179,evi,docred,dev,v2_verifier\deepseek-reasoner-repaired,None
+0.6003636724918036,0.5709164969450102,0.5852699187366416,re_ignore_train_annotated (used officially),docred,dev,v2_verifier\deepseek-reasoner-repaired,None
+0.49637173711474003,0.5709164969450102,0.5310408271964366,re_ignore_train,docred,dev,v2_verifier\deepseek-reasoner-repaired,None
+0.5141936473837655,0.2729938900203666,0.35664112388250313,re,docred,dev,v4\deepseek-chat-repaired,None
+0.4411211043714704,0.21678573264120882,0.29070608911402873,evi,docred,dev,v4\deepseek-chat-repaired,None
+0.47312364707418264,0.2729938900203666,0.3462185472234432,re_ignore_train_annotated (used officially),docred,dev,v4\deepseek-chat-repaired,None
+0.3795806380960599,0.2729938900203666,0.3175827143279758,re_ignore_train,docred,dev,v4\deepseek-chat-repaired,None
+0.634416991764196,0.5961710794297352,0.6146997060058799,re,docred,dev,v4_verifier\deepseek-chat-repaired,None
+0.5488997555012225,0.4846070822840109,0.5147536508803057,evi,docred,dev,v4_verifier\deepseek-chat-repaired,None
+0.5948308987367112,0.5961710794297352,0.5955002350608443,re_ignore_train_annotated (used officially),docred,dev,v4_verifier\deepseek-chat-repaired,None
+0.4915601633812875,0.5961710794297352,0.5388352226609584,re_ignore_train,docred,dev,v4_verifier\deepseek-chat-repaired,None
+0.6849969594301103,0.6423625254582485,0.6629950390986294,re,docred,dev,entities_separately,None
+0.594607159460716,0.5258775761936578,0.5581344606573027,evi,docred,dev,entities_separately,None
+0.6476190469896802,0.6423625254582485,0.6449800763738391,re_ignore_train_annotated (used officially),docred,dev,entities_separately,None
+0.5484995635057907,0.6423625254582485,0.5917319362023392,re_ignore_train,docred,dev,entities_separately,None
+0.46072151045178694,0.3162462392964592,0.37505146150679297,re,redocred,dev,original_NER,original_NER
+0.5934078598593984,0.4111306291919515,0.48573180510353287,evi,redocred,dev,original_NER,original_NER
+0.4227715622313501,0.3162462392964592,0.36183138311620844,re_ignore_train_annotated (used officially),redocred,dev,original_NER,original_NER
+0.33603154801159035,0.3162462392964592,0.3258388233093265,re_ignore_train,redocred,dev,original_NER,original_NER
+0.8395647873392681,0.24554501272853507,0.37996329289583236,re,redocred,dev,xlm-roberta-large-finetuned-conll03-english,sentence
+0.518681888946549,0.31922708399872246,0.39521550019770657,evi,redocred,dev,xlm-roberta-large-finetuned-conll03-english,sentence
+0.8128749404409901,0.24554501272853507,0.3771610446299305,re_ignore_train_annotated (used officially),redocred,dev,xlm-roberta-large-finetuned-conll03-english,sentence
+0.7368591799582764,0.24554501272853507,0.36834553042196494,re_ignore_train,redocred,dev,xlm-roberta-large-finetuned-conll03-english,sentence
+0.8837661190602367,0.28945845869011805,0.43608629331008936,re,redocred,dev,wikineural-multilingual-ner-fine-tuned,sentence
+0.5609118974115412,0.37719578409453847,0.45106464241382604,evi,redocred,dev,wikineural-multilingual-ner-fine-tuned,sentence
+0.8658238155264605,0.28945845869011805,0.4338680385439777,re_ignore_train_annotated (used officially),redocred,dev,wikineural-multilingual-ner-fine-tuned,sentence
+0.8138613838363186,0.28945845869011805,0.4270367533918844,re_ignore_train,redocred,dev,wikineural-multilingual-ner-fine-tuned,sentence
+0.7708074534161491,0.21540152742420737,0.33670977661210094,re,redocred,dev,v2\deepseek-reasoner-repaired,None
+0.4941532535424405,0.2868093260938997,0.3629566008184712,evi,redocred,dev,v2\deepseek-reasoner-repaired,None
+0.7412342198662127,0.21540152742420737,0.33380099706811756,re_ignore_train_annotated (used officially),redocred,dev,v2\deepseek-reasoner-repaired,None
+0.6627056652568383,0.21540152742420737,0.32512616618743184,re_ignore_train,redocred,dev,v2\deepseek-reasoner-repaired,None
+0.8720887245841035,0.2729692200879426,0.41579272054287475,re,redocred,dev,v2_verifier\deepseek-reasoner-repaired,None
+0.5602087734559463,0.35994889811561803,0.43828690875504356,evi,redocred,dev,v2_verifier\deepseek-reasoner-repaired,None
+0.8536379000557575,0.2729692200879426,0.4136612802269662,re_ignore_train_annotated (used officially),redocred,dev,v2_verifier\deepseek-reasoner-repaired,None
+0.7983095284222981,0.2729692200879426,0.4068295570415208,re_ignore_train,redocred,dev,v2_verifier\deepseek-reasoner-repaired,None
+0.675577156743621,0.12867391807451978,0.2161741835147745,re,redocred,dev,v4\deepseek-chat-repaired,None
+0.4442367601246106,0.1707920792079208,0.24672703154737877,evi,redocred,dev,v4\deepseek-chat-repaired,None
+0.6408876911873312,0.12867391807451978,0.2143182021512382,re_ignore_train_annotated (used officially),redocred,dev,v4\deepseek-chat-repaired,None
+0.5533249663181724,0.12867391807451978,0.2087935714088797,re_ignore_train,redocred,dev,v4\deepseek-chat-repaired,None
+0.8760877131917856,0.2912520249942143,0.43716891011723835,re,redocred,dev,v4_verifier\deepseek-chat-repaired,None
+0.5532738793710397,0.3764771638454168,0.44806614083436286,evi,redocred,dev,v4_verifier\deepseek-chat-repaired,None
+0.8574289129807191,0.2912520249942143,0.43480813329153023,re_ignore_train_annotated (used officially),redocred,dev,v4_verifier\deepseek-chat-repaired,None
+0.8024965303675546,0.2912520249942143,0.42739025962520794,re_ignore_train,redocred,dev,v4_verifier\deepseek-chat-repaired,None
+0.9486685353889278,0.31329553344133304,0.4710334029227557,re,redocred,dev,entities_separately,None
+0.5990366541353384,0.40713829447460875,0.4847879825061798,evi,redocred,dev,entities_separately,None
+0.9399959022322427,0.31329553344133304,0.4699569617089768,re_ignore_train_annotated (used officially),redocred,dev,entities_separately,None
+0.9141014338490137,0.31329553344133304,0.4666524424766134,re_ignore_train,redocred,dev,entities_separately,None
+0.46358732299393124,0.31522237505731315,0.37527292576419213,re,redocred,test,original_NER,original_NER
+0.5866969869243889,0.40652328054833375,0.4802680565897245,evi,redocred,test,original_NER,original_NER
+0.42635658876297405,0.31522237505731315,0.36246210609547,re_ignore_train_annotated (used officially),redocred,test,original_NER,original_NER
+0.34317266968399973,0.31522237505731315,0.3286042471205173,re_ignore_train,redocred,test,original_NER,original_NER
+0.8285884929325105,0.23853736817973406,0.3704330025366027,re,redocred,test,xlm-roberta-large-finetuned-conll03-english,sentence
+0.5149583766909469,0.31190419916489404,0.3884990922918404,evi,redocred,test,xlm-roberta-large-finetuned-conll03-english,sentence
+0.8020689636734047,0.23853736817973406,0.3677152710623756,re_ignore_train_annotated (used officially),redocred,test,xlm-roberta-large-finetuned-conll03-english,sentence
+0.7249201254794884,0.23853736817973406,0.3589583142181926,re_ignore_train,redocred,test,xlm-roberta-large-finetuned-conll03-english,sentence
+0.8753481894150418,0.28817056396148555,0.433597792342187,re,redocred,test,wikineural-multilingual-ner-fine-tuned,sentence
+0.5604923798358734,0.3766643031592216,0.45054893276162655,evi,redocred,test,wikineural-multilingual-ner-fine-tuned,sentence
+0.856971632327264,0.28817056396148555,0.43130713266367604,re_ignore_train_annotated (used officially),redocred,test,wikineural-multilingual-ner-fine-tuned,sentence
+0.8039430427055229,0.28817056396148555,0.4242648724364836,re_ignore_train,redocred,test,wikineural-multilingual-ner-fine-tuned,sentence
+0.7682020802377415,0.20741632278771205,0.32663928877656934,re,redocred,test,v2\deepseek-reasoner-repaired,None
+0.48853766196782,0.2703064681320413,0.34804219922905255,evi,redocred,test,v2\deepseek-reasoner-repaired,None
+0.743722129209758,0.20741632278771205,0.32436940992676,re_ignore_train_annotated (used officially),redocred,test,v2\deepseek-reasoner-repaired,None
+0.6677821701619039,0.20741632278771205,0.316520019798878,re_ignore_train,redocred,test,v2\deepseek-reasoner-repaired,None
+0.8606303516123155,0.2707473635946813,0.41191088634084666,re,redocred,test,v2_verifier\deepseek-reasoner-repaired,None
+0.5576377758599433,0.35633813913180495,0.43482022687944627,evi,redocred,test,v2_verifier\deepseek-reasoner-repaired,None
+0.8415821063541477,0.2707473635946813,0.40969180930597177,re_ignore_train_annotated (used officially),redocred,test,v2_verifier\deepseek-reasoner-repaired,None
+0.7849311195250741,0.2707473635946813,0.4026188552916212,re_ignore_train,redocred,test,v2_verifier\deepseek-reasoner-repaired,None
+0.6567256912084498,0.12116001834021091,0.20457734552668505,re,redocred,test,v4\deepseek-chat-repaired,None
+0.4423564189189189,0.16505160324588355,0.24040392449365997,evi,redocred,test,v4\deepseek-chat-repaired,None
+0.6192281164051409,0.12116001834021091,0.20266583544379832,re_ignore_train_annotated (used officially),redocred,test,v4\deepseek-chat-repaired,None
+0.536881808311476,0.12116001834021091,0.19770357173959824,re_ignore_train,redocred,test,v4\deepseek-chat-repaired,None
+0.8651999301554042,0.2839867033470885,0.4276159654800431,re,redocred,test,v4_verifier\deepseek-chat-repaired,None
+0.5515343171702974,0.3709918852911053,0.4435966275728887,evi,redocred,test,v4_verifier\deepseek-chat-repaired,None
+0.8457850562409408,0.2839867033470885,0.4252039543804536,re_ignore_train_annotated (used officially),redocred,test,v4_verifier\deepseek-chat-repaired,None
+0.7907291927602895,0.2839867033470885,0.4178901186920994,re_ignore_train,redocred,test,v4_verifier\deepseek-chat-repaired,None
+0.947331583552056,0.3102934433745988,0.46746967145879204,re,redocred,test,entities_separately,None
+0.598945518453427,0.4027416686362562,0.48162803843979646,evi,redocred,test,entities_separately,None
+0.9390688240099822,0.3102934433745988,0.466457018231842,re_ignore_train_annotated (used officially),redocred,test,entities_separately,None
+0.914318243910281,0.3102934433745988,0.463341905338421,re_ignore_train,redocred,test,entities_separately,None

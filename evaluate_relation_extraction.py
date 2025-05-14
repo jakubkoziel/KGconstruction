@@ -123,46 +123,10 @@ def get_dreeam_results():
                 se = single_experiment(docred_type=docred_type, split=split, model_name=model,
                                        prediction_level=str(None))
                 results.append(se)
-        break  # TODO
 
     results = pd.concat(results, ignore_index=True)
-    results.to_csv('results_dreeam_adjusted_but_partial.csv', index=False)
+    results.to_csv('results_dreeam.csv', index=False)
 
 
 if __name__ == '__main__':
     get_dreeam_results()
-
-# print(z)
-# print('done')
-# [re_p, re_r, re_f1], [evi_p, evi_r, evi_f1], \
-#         [re_p_ignore_train_annotated, re_r, re_f1_ignore_train_annotated], \
-#         [re_p_ignore_train, re_r, re_f1_ignore_train] =
-
-
-# def define_selected_experiments(prefix_dr_loader='', prefix_ner_loader=f'NERs'):
-#     dr_loader = DocREDLoader(prefix_dr_loader)
-#     ner_loader = PredictedNERLoader(prefix_ner_loader)
-#
-#     experiments = [
-#
-#         dr_loader.return_path_to_read_from(docred_type='redocred', split='dev'),
-#         dr_loader.return_path_to_read_from(docred_type='redocred', split='test'),
-#
-#     ]
-#     for docred_type in ['docred']:  # , 'redocred']:
-#         for split in ['dev']:  # , 'test']:
-#             if docred_type == 'docred' and split == 'test':
-#                 continue
-#             experiments.append(dr_loader.return_path_to_read_from(docred_type='docred', split='dev'))
-#
-#             for model in ["xlm-roberta-large-finetuned-conll03-english", 'wikineural-multilingual-ner-fine-tuned',
-#                           ]:
-#                 experiments.append(
-#                     ner_loader.return_path_to_read_from(docred_type='docred', split='dev', model_name=model,
-#                                                         prediction_level='sentence'))
-#             for model in [os.path.join('v2', 'deepseek-reasoner'), os.path.join('v2_verifier', 'deepseek-reasoner'),
-#                           os.path.join('v4', 'deepseek-chat'), os.path.join('v4_verifier', 'deepseek-chat')]:
-#                 experiments.append(
-#                     ner_loader.return_path_to_read_from(docred_type='docred', split='dev', model_name=model,
-#                                                         prediction_level=str(None)))
-#     return experiments
