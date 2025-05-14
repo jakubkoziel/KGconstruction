@@ -249,16 +249,17 @@ def main():
     experiment_type = 're_' + ner_model_name
     dataset = 'docred'  # 'docred'
     split = 'dev'
-    models = ['deepseek-chat']  # ['deepseek-reasoner']  #   # , 'gpt-4o-mini', 'deepseek-reasoner']
+    models = ['deepseek-chat', 'gpt-4o-mini',
+              'deepseek-reasoner']  # ['deepseek-reasoner']  #   # , 'gpt-4o-mini', 'deepseek-reasoner']
     experiments = ['v1', 'v2', 'v3', 'v4', 'v5']  # ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
-    num_processes = 2  # 10
+    num_processes = 10  # 10
     dr_loader = PredictedNERLoader('../NERs')
 
     docs = dr_loader.load_docs(docred_type=dataset, split=split, model_name=ner_model_name,
                                prediction_level=str(None))
     # docs = dr_loader.load_docs(docred_type=dataset, split=split, model_name='wikineural-multilingual-ner-fine-tuned',
     #                            prediction_level='sentence')
-    number_of_docs = 4  # len(docs)
+    number_of_docs = 20  # len(docs)
 
     # Logic
     timestamp = int(time.time())

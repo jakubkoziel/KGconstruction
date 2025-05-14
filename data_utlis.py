@@ -264,3 +264,21 @@ class LLM_API_Response_Loader(DataLoader):
             output_docs.append(document_predicted)
 
         return output_docs
+
+    def triplets_predictions(self, docs_starting, experiment_type, dataset, split, experiment, model,
+                             narrow_docs_to):
+        path_to_predictions = os.path.join(experiment_type, dataset, split, experiment, model)
+
+        output_docs = []
+        if narrow_docs_to is not None:
+            no_docs_to_read = narrow_docs_to
+        else:
+            no_docs_to_read = len(self._list_directory(path_to_predictions))
+
+        for i in range(no_docs_to_read):
+            predicted = self._load_json(os.path.join(path_to_predictions, f'doc_{i}.json'))
+            for triplet in predicted:
+                triplet['title'] = docs_starting[i]['title']
+                output_docs.append(triplet)
+
+        return output_docs
