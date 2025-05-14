@@ -4,9 +4,11 @@ from credentials import credentials
 import multiprocessing
 import time
 import NER_predefined_messages
-from data_utlis import DocREDLoader, LLM_API_Response_Loader
+import RE_predefined_messages
+from data_utlis import DocREDLoader, LLM_API_Response_Loader, PredictedNERLoader
 from data_utlis import PredictedNERLoader
 import os
+import re
 
 
 def _ner_basic_messages(model, experiment, doc_sents):
@@ -90,7 +92,33 @@ def _ner_verifier_messages(model, dataset, split, experiment, doc_sents, doc_tit
     return messages_base + messages_continuation
 
 
-def construct_messages(model, experiment_type, dataset, split, experiment, doc_sents, doc_title, document_id):
+def _re_basic_messages(model, experiment, doc_sents, doc_vertexSet):
+    system_msg = RE_predefined_messages.experiment_prompts['system_' + experiment]
+
+    system_role = 'system' if model != 'o1-mini' else 'user'
+
+    for i in range(len(doc_vertexSet)):
+        entity = doc_vertexSet[i][0]
+        doc_sents[entity['sent_id']][entity['pos'][0]] = '<<' + str(i) + '>>' + \
+                                                         doc_sents[entity['sent_id']][entity['pos'][0]]
+        doc_sents[entity['sent_id']][entity['pos'][1] - 1] = doc_sents[entity['sent_id']][
+                                                                 entity['pos'][1] - 1] + '<<' + str(i) + '>>'
+
+    concatenated_sents = []
+    for i in range(len(doc_sents)):
+        concatenated_sents.append(' '.join(doc_sents[i]))
+    concatenated_sents = ' '.join(concatenated_sents)
+
+    messages = [
+        {"role": system_role, "content": system_msg},
+        {"role": "user", "content": f"Text to analyze: {json.dumps(concatenated_sents, ensure_ascii=False)}"}
+    ]
+
+    return messages
+
+
+def construct_messages(model, experiment_type, dataset, split, experiment, doc_sents, doc_title, document_id,
+                       doc_vertexSet=None):
     if experiment_type == 'ner':
         if 'verifier' in experiment:
             return _ner_verifier_messages(model=model, dataset=dataset, split=split,
@@ -104,6 +132,26 @@ def construct_messages(model, experiment_type, dataset, split, experiment, doc_s
             return _ner_refine_messages(model=model, experiment_type=experiment_type, dataset=dataset,
                                         split=split, experiment=experiment,
                                         doc_sents=doc_sents, doc_title=doc_title, document_id=document_id)
+
+    elif experiment_type.startswith('re'):
+        return _re_basic_messages(experiment=experiment, model=model,
+                                  doc_sents=doc_sents, doc_vertexSet=doc_vertexSet)
+
+
+def revert_relation_mapping(response):
+    with open('../data/DocRED/rel_info.json', 'r', encoding='utf-8') as file:
+        relations = json.load(file)
+    relations = {v: k for k, v in relations.items()}
+
+    response_remapped = []
+    for rel in response:
+        if rel["r"] in relations:
+            new_rel = rel.copy()
+            new_rel["r"] = relations[rel["r"]]
+            response_remapped.append(new_rel)
+        else:
+            print(f"WARNING: Relation {rel['r']} not found in relation_dict")
+    return response_remapped
 
 
 def single_process_for_requests(process_id, model, docs, document_subset, experiment_type, dataset, split,
@@ -129,11 +177,19 @@ def single_process_for_requests(process_id, model, docs, document_subset, experi
         print(f'Process {process_id} starting to analyze document {i}')
         messages = construct_messages(model=model, experiment_type=experiment_type, dataset=dataset, split=split,
                                       experiment=experiment,
-                                      doc_sents=docs[i]['sents'], doc_title=docs[i]['title'], document_id=i)
-        # if model == "deepseek-chat":
-        #     print(messages)
+                                      doc_sents=docs[i]['sents'], doc_title=docs[i]['title'], document_id=i,
+                                      doc_vertexSet=docs[i]['vertexSet'])
+        if model == "deepseek-chat":
+            print(messages)
         try:
             response = request_handler.send_request(model=model, messages=messages, process_id=process_id)
+
+            if experiment_type.startswith('re') and (experiment == 'v4' or experiment == 'v3'):
+                print(response)
+                response = json.loads(re.search(r'\$\$\$(.*)\$\$\$', response, re.DOTALL).group(1))
+                response = revert_relation_mapping(response)
+                response = f'$$${json.dumps(response, ensure_ascii=False)}$$$'
+                print(response)
 
             response_loader.save_response(experiment_type=experiment_type, dataset=dataset, split=split,
                                           experiment=experiment, model=model, document_id=i,
@@ -148,7 +204,7 @@ def single_process_for_requests(process_id, model, docs, document_subset, experi
                                                   experiment=experiment, model=model, data_to_save=error_for_simple_ner)
 
 
-def main():
+def main_NER():
     # Settings
     experiment_type = 'ner'
     dataset = 'redocred'  # 'docred'
@@ -159,6 +215,50 @@ def main():
     dr_loader = DocREDLoader('..')
     docs = dr_loader.load_docs(docred_type=dataset, split=split)
     number_of_docs = len(docs)
+
+    # Logic
+    timestamp = int(time.time())
+    processes = []
+
+    processes_subsets = [[] for _ in range(num_processes)]
+    for i in range(number_of_docs):
+        processes_subsets[i % num_processes].append(i)
+
+    for experiment in experiments:
+        for model in models:
+            for i in range(
+                    num_processes):
+                process = multiprocessing.Process(target=single_process_for_requests,
+                                                  args=(
+                                                      i, model, docs,
+                                                      processes_subsets[i],
+                                                      experiment_type, dataset, split, experiment))
+                processes.append(process)
+                process.start()
+                time.sleep(2)
+
+            for process in processes:
+                process.join()
+
+            print('Processes have finished', experiment, model, (int(time.time()) - timestamp) / 60, 'minutes')
+
+
+def main():
+    # Settings
+    ner_model_name = 'entities_separately'
+    experiment_type = 're_' + ner_model_name
+    dataset = 'docred'  # 'docred'
+    split = 'dev'
+    models = ['deepseek-chat']  # ['deepseek-reasoner']  #   # , 'gpt-4o-mini', 'deepseek-reasoner']
+    experiments = ['v1', 'v2', 'v3', 'v4', 'v5']  # ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
+    num_processes = 2  # 10
+    dr_loader = PredictedNERLoader('../NERs')
+
+    docs = dr_loader.load_docs(docred_type=dataset, split=split, model_name=ner_model_name,
+                               prediction_level=str(None))
+    # docs = dr_loader.load_docs(docred_type=dataset, split=split, model_name='wikineural-multilingual-ner-fine-tuned',
+    #                            prediction_level='sentence')
+    number_of_docs = 4  # len(docs)
 
     # Logic
     timestamp = int(time.time())
