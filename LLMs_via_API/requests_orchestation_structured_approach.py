@@ -179,17 +179,18 @@ def single_process_for_requests(process_id, model, docs, document_subset, experi
                                       experiment=experiment,
                                       doc_sents=docs[i]['sents'], doc_title=docs[i]['title'], document_id=i,
                                       doc_vertexSet=docs[i]['vertexSet'])
-        if model == "deepseek-chat":
-            print(messages)
+        # if model == "deepseek-chat":
+        #     print(messages)
         try:
             response = request_handler.send_request(model=model, messages=messages, process_id=process_id)
 
-            if experiment_type.startswith('re') and (experiment == 'v4' or experiment == 'v3'):
-                print(response)
+            if experiment_type.startswith('re') and (
+                    experiment == 'v4' or experiment == 'v3' or experiment == 'v6' or experiment == 'v7'):
+                # print(response)
                 response = json.loads(re.search(r'\$\$\$(.*)\$\$\$', response, re.DOTALL).group(1))
                 response = revert_relation_mapping(response)
                 response = f'$$${json.dumps(response, ensure_ascii=False)}$$$'
-                print(response)
+                # print(response)
 
             response_loader.save_response(experiment_type=experiment_type, dataset=dataset, split=split,
                                           experiment=experiment, model=model, document_id=i,
@@ -247,11 +248,12 @@ def main():
     # Settings
     ner_model_name = 'entities_separately'
     experiment_type = 're_' + ner_model_name
-    dataset = 'docred'  # 'docred'
-    split = 'dev'
+    dataset = 'redocred'  # 'docred'
+    split = 'test'
     models = ['deepseek-chat', 'gpt-4o-mini',
               'deepseek-reasoner']  # ['deepseek-reasoner']  #   # , 'gpt-4o-mini', 'deepseek-reasoner']
-    experiments = ['v1', 'v2', 'v3', 'v4', 'v5']  # ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
+    experiments = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6',
+                   'v7']  # ['v1', 'v2', 'v3', 'v4', 'v5']  # ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
     num_processes = 10  # 10
     dr_loader = PredictedNERLoader('../NERs')
 

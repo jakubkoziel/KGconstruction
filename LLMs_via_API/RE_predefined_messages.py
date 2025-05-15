@@ -211,6 +211,8 @@ You are a highly skilled RELATION EXTRACTION system. Analyze the given text and 
      {'}'}]$$$
    - Validate JSON syntax
 """
+
+
 # CHECK OF NOTOVERLAPPING RELATIONS
 # print(relations)
 # print(descriptions)
@@ -232,6 +234,72 @@ You are a highly skilled RELATION EXTRACTION system. Analyze the given text and 
 #     if not found:
 #         print(f'extra relation from redocred {g_t} in descriptions')
 
+def get_specific_examples(doc_id_from_list):
+    dr_loader = DocREDLoader('..')
+
+    docs_coverage = [2720, 1651, 2975, 810, 3007, 1003, 2384, 655, 1656, 2301, 176, 328, 2380, 584, 88, 46, 887, 299]
+    document = dr_loader.load_docs(docred_type='redocred', split='train')[docs_coverage[doc_id_from_list]]
+
+    for i in range(len(document['vertexSet'])):
+        entity = document['vertexSet'][i][0]
+        document['sents'][entity['sent_id']][entity['pos'][0]] = '<<' + str(i) + '>>' + \
+                                                                 document['sents'][entity['sent_id']][entity['pos'][0]]
+        document['sents'][entity['sent_id']][entity['pos'][1] - 1] = document['sents'][entity['sent_id']][
+                                                                         entity['pos'][1] - 1] + '<<' + str(i) + '>>'
+
+    concatenated_sents = []
+    for i in range(len(document['sents'])):
+        concatenated_sents.append(' '.join(document['sents'][i]))
+    concatenated_sents = ' '.join(concatenated_sents)
+    return concatenated_sents, document['labels']
+
+
+def func_system_msg_gpt_examples(how_many):
+    system_msg_gpt = f"""
+    You are a highly skilled RELATION EXTRACTION system. Analyze the given text and extract DIRECTED RELATIONS between entities explicitly marked with <<n>> index tags. Follow these guidelines:
+    
+    1. Entity Identification:
+       - Entities are wrapped in <<n>> tags where n is their pre-defined index
+       - Example: <<0>>Paris<<0>> = index 0
+       - Preserve EXACT index numbers from the markers
+    
+    2. Relation Extraction:
+       - Extract ONLY relations from this Wikidata subset:
+         {json.dumps(descriptions, ensure_ascii=False)}
+       - Relations must be DIRECTED (h_idx -> t_idx)
+       - Relations can span MULTIPLE sentences
+       - Return empty list if no valid relations exist
+       - STRICTLY ignore relations not in allowed list
+    
+    3. Evidence Handling:
+       - List ALL supporting sentence indices (0-based)
+       - Sort evidence indices ASCENDING
+       - Include cross-sentence evidence
+    
+    4. Output Requirements:
+       - ONLY output valid JSON between $$$ delimiters
+       - Use EXACT structure:
+         [{'{'}
+           "h_idx": (marker number), 
+           "t_idx": (marker number),
+           "r": (relation key), 
+           "evidence": [sorted_indices]
+         {'}'}]
+       - Validate JSON syntax
+    """
+    for i in range(how_many):
+        ex_input, ex_output = get_specific_examples(i)
+        system_msg_gpt += f"""
+        Example Input:
+        {ex_input}
+        Example Output:
+        $$${json.dumps(remap_example_from_r_ids_to_names(ex_output), ensure_ascii=False)}$$$"""
+
+    return system_msg_gpt
+
+
+system_msg_gpt_v6 = func_system_msg_gpt_examples(5)
+system_msg_gpt_v7 = func_system_msg_gpt_examples(10)
 
 experiment_prompts = {
     'system_v1': system_msg_gpt_v1,
@@ -239,6 +307,8 @@ experiment_prompts = {
     'system_v3': system_msg_gpt_v3,
     'system_v4': system_msg_gpt_v4,
     'system_v5': system_msg_gpt_v5,
+    'system_v6': system_msg_gpt_v6,
+    'system_v7': system_msg_gpt_v7,
     # 'refine_v1': refine_instructions_v1,
     # 'refine_v2': refine_instructions_v2,
 

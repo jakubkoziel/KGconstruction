@@ -109,18 +109,18 @@ def single_experiment(docred_type, split, ner_model_name, prediction_level, mode
 
 def get_LLM_results():
     results = []
-    prediction_level = 4
+    prediction_level = 20
 
     for ner_model_name in ['entities_separately']:
         for docred_type in ['docred', 'redocred']:
             for split in ['dev', 'test']:
-                if docred_type == 'docred' and split == 'test':
+                if (docred_type == 'docred' and split == 'test') or (docred_type == 'redocred' and split == 'dev'):
                     continue
-                if docred_type != 'docred' or split != 'dev':  # TODO
-                    continue
+                # if docred_type != 'docred' or split != 'dev':  # TODO
+                #     continue
 
-                for model in ['deepseek-chat']:
-                    for experiment in ['v1', 'v2', 'v3', 'v4', 'v5']:
+                for model in ['deepseek-chat', 'deepseek-reasoner', 'gpt-4o-mini']:  # 'deepseek-chat',
+                    for experiment in ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7']:  # []:
                         # se = single_experiment(docred_type=docred_type, split=split, model_name='original_NER',
                         #                        prediction_level='original_NER')
                         se = single_experiment(docred_type=docred_type, split=split,
@@ -129,7 +129,7 @@ def get_LLM_results():
                         results.append(se)
 
     results = pd.concat(results, ignore_index=True)
-    results.to_csv('results_LLMs_API-1.csv', index=False)
+    results.to_csv('results_LLMs_API_20_full.csv', index=False)
 
 
 if __name__ == '__main__':

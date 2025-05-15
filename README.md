@@ -56,7 +56,27 @@ Check dreeam\run_overlay.py to conduct dreeam experiments. Required changes to d
 repository are commited. No further changes should be required.
 
 After this evaluate_relation_extraction.py script can be used to evaluate results of dreeam on various NERs of previous
-experiments.
+experiments. There are 2 TODOs in runoverlay. One prepares dataset with entities separated and the second prepares
+dataset returned by LLMs via API which disregards faulty entities.
+
+RE_results_to_overleaf with manual corrections prepares dreeam results for thesis.
+
+## RE with LLMs
+
+main_NER() in requests_orchestration_structured_approach.py is for NER
+main() in requests_orchestration_structured_approach.py is for RE
+configuration similar to NERs
+
+RE_descriptions contains reliation_description_docred
+from https://github.com/THUDM/AutoRE/blob/main/AutoRE/data/relations_desc/relation_description_redocred.json with my
+adjustments
+RE_descirpitons contains property_dict which is mine extedsion of relation_description_docred with additional properties
+2 jupyters there contain some steps required for reproduction which do not include manual corrections
+
+in LLMs_via_API/minimal subset examples we solve https://en.wikipedia.org/wiki/Set_cover_problem with greedy
+estimation - this gives us which docs to use to cover as many relations as possible - relations weighted per occurrences
+during
+selection
 
 
 
