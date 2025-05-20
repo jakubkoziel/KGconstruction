@@ -301,6 +301,19 @@ def func_system_msg_gpt_examples(how_many):
 system_msg_gpt_v6 = func_system_msg_gpt_examples(5)
 system_msg_gpt_v7 = func_system_msg_gpt_examples(10)
 
+verifier = f"""
+    Please carefully review your response and identify potential errors. Specifically:
+    1. ASSESS COMPLETENESS: Are there any relations not tagged yet but should be?
+    2. HAVE YOU TAGGED ANYTHING INCORRECTLY: Perhaps some relations are misclassified?
+
+    While looking for mistakes:
+    - Relay on gold examples provided or definitions of relations
+    - Explain the potential error justifying it by recalling definition of the relation or gold example
+    - Correct any issues while keeping the rest of the response unchanged
+    - Provide response in the same format as previously
+    - Do not include any comments within json structure
+    """
+
 experiment_prompts = {
     'system_v1': system_msg_gpt_v1,
     'system_v2': system_msg_gpt_v2,
@@ -309,7 +322,7 @@ experiment_prompts = {
     'system_v5': system_msg_gpt_v5,
     'system_v6': system_msg_gpt_v6,
     'system_v7': system_msg_gpt_v7,
-    # 'refine_v1': refine_instructions_v1,
+    'verifier': verifier,
     # 'refine_v2': refine_instructions_v2,
 
 }

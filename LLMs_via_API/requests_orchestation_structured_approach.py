@@ -10,6 +10,10 @@ from data_utlis import PredictedNERLoader
 import os
 import re
 
+# Loads relations {"P6": "head of government", "P17": "country", ...
+with open('../data/DocRED/rel_info.json', 'r', encoding='utf-8') as file:
+    relid2name = json.load(file)
+
 
 def _ner_basic_messages(model, experiment, doc_sents):
     if experiment in ('v3', 'v4', 'v5'):
@@ -117,8 +121,36 @@ def _re_basic_messages(model, experiment, doc_sents, doc_vertexSet):
     return messages
 
 
+def _re_verifier(model, experiment, doc_sents, doc_vertexSet, doc_title, dreeam_RE_output):
+    conversation_start = _re_basic_messages(model=model, experiment=experiment, doc_sents=doc_sents,
+                                            doc_vertexSet=doc_vertexSet)
+
+    single_doc_dreeam = []
+    for r in dreeam_RE_output:
+        if r['title'] == doc_title:
+            single_doc_dreeam.append(
+                {
+                    'h_idx': r['h_idx'],
+                    't_idx': r['t_idx'],
+                    'r': relid2name[r['r']],
+                    'evidence': r['evidence']
+                }
+            )
+
+    if len(single_doc_dreeam) == 0:
+        raise Exception("Something seems wrong if DREEAM response for document is empty")
+
+    messages_continuation = [
+        {"role": "assistant", "content": '$$$' + json.dumps(single_doc_dreeam, ensure_ascii=False) + '$$$'},
+        {'role': 'user',
+         'content': RE_predefined_messages.experiment_prompts['verifier']
+         }]
+
+    return conversation_start + messages_continuation
+
+
 def construct_messages(model, experiment_type, dataset, split, experiment, doc_sents, doc_title, document_id,
-                       doc_vertexSet=None):
+                       doc_vertexSet=None, dreeam_RE_output=None):
     if experiment_type == 'ner':
         if 'verifier' in experiment:
             return _ner_verifier_messages(model=model, dataset=dataset, split=split,
@@ -136,6 +168,11 @@ def construct_messages(model, experiment_type, dataset, split, experiment, doc_s
     elif experiment_type.startswith('re'):
         return _re_basic_messages(experiment=experiment, model=model,
                                   doc_sents=doc_sents, doc_vertexSet=doc_vertexSet)
+
+    elif experiment_type.startswith('verifier_re_'):
+        return _re_verifier(experiment=experiment, model=model,
+                            doc_sents=doc_sents, doc_vertexSet=doc_vertexSet, doc_title=doc_title,
+                            dreeam_RE_output=dreeam_RE_output)
 
 
 def revert_relation_mapping(response):
@@ -155,7 +192,7 @@ def revert_relation_mapping(response):
 
 
 def single_process_for_requests(process_id, model, docs, document_subset, experiment_type, dataset, split,
-                                experiment):
+                                experiment, dreeam_output=None):
     if model == "gpt-4o-mini" or model == 'o1-mini':
         request_handler = RequestHandler(api_key=credentials['OpenAI']['api_key'])
     elif model == "deepseek-chat" or model == "deepseek-reasoner":
@@ -178,14 +215,17 @@ def single_process_for_requests(process_id, model, docs, document_subset, experi
         messages = construct_messages(model=model, experiment_type=experiment_type, dataset=dataset, split=split,
                                       experiment=experiment,
                                       doc_sents=docs[i]['sents'], doc_title=docs[i]['title'], document_id=i,
-                                      doc_vertexSet=docs[i]['vertexSet'])
+                                      doc_vertexSet=docs[i]['vertexSet'], dreeam_RE_output=dreeam_output)
+
         # if model == "deepseek-chat":
         #     print(messages)
+
         try:
             response = request_handler.send_request(model=model, messages=messages, process_id=process_id)
 
             if experiment_type.startswith('re') and (
-                    experiment == 'v4' or experiment == 'v3' or experiment == 'v6' or experiment == 'v7'):
+                    experiment == 'v4' or experiment == 'v3' or experiment == 'v6' or experiment == 'v7') or \
+                    experiment_type.startswith('verifier_re_'):
                 # print(response)
                 response = json.loads(re.search(r'\$\$\$(.*)\$\$\$', response, re.DOTALL).group(1))
                 response = revert_relation_mapping(response)
@@ -247,18 +287,25 @@ def main_NER():
 def main():
     # Settings
     ner_model_name = 'entities_separately'
-    experiment_type = 're_' + ner_model_name
+    experiment_type = 'verifier_re_' + ner_model_name  # 're_' + ner_model_name
     dataset = 'redocred'  # 'docred'
     split = 'test'
-    models = ['deepseek-chat', 'gpt-4o-mini',
-              'deepseek-reasoner']  # ['deepseek-reasoner']  #   # , 'gpt-4o-mini', 'deepseek-reasoner']
-    experiments = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6',
-                   'v7']  # ['v1', 'v2', 'v3', 'v4', 'v5']  # ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
+    models = ['deepseek-chat', 'gpt-4o-mini', 'deepseek-reasoner']
+    # ['deepseek-reasoner']  #   # , 'gpt-4o-mini', 'deepseek-reasoner']
+    experiments = ['v7']  # ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7']
+    # ['v1', 'v2', 'v3', 'v4', 'v5']  # ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
     num_processes = 10  # 10
     dr_loader = PredictedNERLoader('../NERs')
 
     docs = dr_loader.load_docs(docred_type=dataset, split=split, model_name=ner_model_name,
                                prediction_level=str(None))
+
+    if experiment_type.startswith('verifier_re_'):
+        dreeam_output = dr_loader.get_dreeam_RE_results(docred_type=dataset, split=split, model_name=ner_model_name,
+                                                        prediction_level=str(None))
+    else:
+        dreeam_output = None
+
     # docs = dr_loader.load_docs(docred_type=dataset, split=split, model_name='wikineural-multilingual-ner-fine-tuned',
     #                            prediction_level='sentence')
     number_of_docs = 20  # len(docs)
@@ -279,7 +326,8 @@ def main():
                                                   args=(
                                                       i, model, docs,
                                                       processes_subsets[i],
-                                                      experiment_type, dataset, split, experiment))
+                                                      experiment_type, dataset, split, experiment, dreeam_output))
+
                 processes.append(process)
                 process.start()
                 time.sleep(2)
