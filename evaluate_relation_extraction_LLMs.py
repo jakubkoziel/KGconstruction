@@ -74,7 +74,7 @@ def narrow_truth_to_only_evaluated(truth, predicted_docs_subset):
     return truth_subset
 
 
-def single_experiment(docred_type, split, ner_model_name, prediction_level, model, experiment):
+def single_experiment(docred_type, split, ner_model_name, prediction_level, model, experiment, experiment_type='re_'):
     dr_loader = DocREDLoader()
     truth = dr_loader.load_docs(docred_type=docred_type, split=split)
 
@@ -84,7 +84,7 @@ def single_experiment(docred_type, split, ner_model_name, prediction_level, mode
 
     response_loader = LLM_API_Response_Loader('LLMs_via_API')
     predicted_triplets = response_loader.triplets_predictions(docs_starting=predicted_docs,
-                                                              experiment_type='re_' + ner_model_name,
+                                                              experiment_type=experiment_type + ner_model_name,
                                                               dataset=docred_type, split=split,
                                                               experiment=experiment, model=model,
                                                               narrow_docs_to=prediction_level)
@@ -98,7 +98,7 @@ def single_experiment(docred_type, split, ner_model_name, prediction_level, mode
     df['split'] = split
     df['ner_model_name'] = ner_model_name
     df['prediction_level'] = prediction_level
-    df['experiment_type'] = 're_' + ner_model_name
+    df['experiment_type'] = experiment_type + ner_model_name
     df['experiment'] = experiment
     df['model'] = model
 
@@ -116,11 +116,12 @@ def get_LLM_results():
             for split in ['dev', 'test']:
                 if (docred_type == 'docred' and split == 'test') or (docred_type == 'redocred' and split == 'dev'):
                     continue
-                # if docred_type != 'docred' or split != 'dev':  # TODO
+                # if docred_type != 'docred' or split != 'dev':
                 #     continue
 
-                for model in ['deepseek-chat', 'deepseek-reasoner', 'gpt-4o-mini']:  # 'deepseek-chat',
-                    for experiment in ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7']:  # []:
+                for model in ['deepseek-chat', 'deepseek-reasoner', 'gpt-4o-mini']:  # 'deepseek-chat', #'gpt-4o-mini'
+                    for experiment in ['v1', 'v2', 'v3', 'v4', 'v5', 'v6',
+                                       'v7']:  # []: # 'v1', 'v2', 'v3', 'v4', 'v5', 'v6',
                         # se = single_experiment(docred_type=docred_type, split=split, model_name='original_NER',
                         #                        prediction_level='original_NER')
                         se = single_experiment(docred_type=docred_type, split=split,
@@ -129,8 +130,39 @@ def get_LLM_results():
                         results.append(se)
 
     results = pd.concat(results, ignore_index=True)
-    results.to_csv('results_LLMs_API_20_full.csv', index=False)
+    results.to_csv('results_LLMs_API_sadfasdfa.csv', index=False)
+
+
+def get_LLM_results_on_full_set():
+    results = []
+    prediction_level = None
+
+    for ner_model_name in ['entities_separately']:
+        for docred_type in ['docred', 'redocred']:  # 'docred',
+            for split in ['dev', 'test']:
+                if (docred_type == 'docred' and split == 'test') or (docred_type == 'redocred' and split == 'dev'):
+                    continue
+                # if docred_type != 'docred' or split != 'dev':
+                #     continue
+
+                for model in ['deepseek-chat', 'deepseek-reasoner']:
+                    for experiment in ['v7']:
+                        se = single_experiment(docred_type=docred_type, split=split,
+                                               ner_model_name=ner_model_name, prediction_level=prediction_level,
+                                               model=model, experiment=experiment, experiment_type='re_')
+                        results.append(se)
+
+                for model in ['deepseek-chat', 'deepseek-reasoner']:
+                    for experiment in ['v7']:
+                        se = single_experiment(docred_type=docred_type, split=split,
+                                               ner_model_name=ner_model_name, prediction_level=prediction_level,
+                                               model=model, experiment=experiment, experiment_type='verifier_re_')
+                        results.append(se)
+
+    results = pd.concat(results, ignore_index=True)
+    results.to_csv('results_LLMs_API_v7_both_full_sets.csv', index=False)
 
 
 if __name__ == '__main__':
-    get_LLM_results()
+    # get_LLM_results()
+    get_LLM_results_on_full_set()

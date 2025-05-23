@@ -138,7 +138,8 @@ def _re_verifier(model, experiment, doc_sents, doc_vertexSet, doc_title, dreeam_
             )
 
     if len(single_doc_dreeam) == 0:
-        raise Exception("Something seems wrong if DREEAM response for document is empty")
+        print("WARNING: DREEAM response for document is empty")
+        return conversation_start
 
     messages_continuation = [
         {"role": "assistant", "content": '$$$' + json.dumps(single_doc_dreeam, ensure_ascii=False) + '$$$'},
@@ -287,10 +288,10 @@ def main_NER():
 def main():
     # Settings
     ner_model_name = 'entities_separately'
-    experiment_type = 'verifier_re_' + ner_model_name  # 're_' + ner_model_name
-    dataset = 'redocred'  # 'docred'
-    split = 'test'
-    models = ['deepseek-chat', 'gpt-4o-mini', 'deepseek-reasoner']
+    experiment_type = 'verifier_re_' + ner_model_name  # 're_' + ner_model_name 'verifier_re_'
+    dataset = 'docred'  # 'docred'
+    split = 'dev'
+    models = ['deepseek-chat', 'deepseek-reasoner']  # 'gpt-4o-mini',
     # ['deepseek-reasoner']  #   # , 'gpt-4o-mini', 'deepseek-reasoner']
     experiments = ['v7']  # ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7']
     # ['v1', 'v2', 'v3', 'v4', 'v5']  # ['v4_refined_v1', 'v4_refined_v2']  # [v1, v2, ...]
@@ -308,7 +309,7 @@ def main():
 
     # docs = dr_loader.load_docs(docred_type=dataset, split=split, model_name='wikineural-multilingual-ner-fine-tuned',
     #                            prediction_level='sentence')
-    number_of_docs = 20  # len(docs)
+    number_of_docs = len(docs)  # 20  #
 
     # Logic
     timestamp = int(time.time())
@@ -330,7 +331,7 @@ def main():
 
                 processes.append(process)
                 process.start()
-                time.sleep(2)
+                time.sleep(1)
 
             for process in processes:
                 process.join()
