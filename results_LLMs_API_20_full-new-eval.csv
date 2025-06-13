@@ -1,0 +1,169 @@
+precision,recall,f1-score,metric_type,docred_type,split,ner_model_name,prediction_level,experiment_type,experiment,model
+0.24778761061946902,0.18181818181818182,0.20973782771535582,re,docred,dev,entities_separately,20,re_entities_separately,v1,deepseek-chat
+0.23348017621145375,0.09044368600682594,0.13038130381303814,evi,docred,dev,entities_separately,20,re_entities_separately,v1,deepseek-chat
+0.2410714178093117,0.18181818181818182,0.20729366204810631,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v1,deepseek-chat
+0.21296295310356697,0.18181818181818182,0.196162042725756,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v1,deepseek-chat
+0.28044280442804426,0.24675324675324675,0.2625215889464594,re,docred,dev,entities_separately,20,re_entities_separately,v2,deepseek-chat
+0.23711340206185566,0.11774744027303755,0.15735461801596348,evi,docred,dev,entities_separately,20,re_entities_separately,v2,deepseek-chat
+0.2499999903846158,0.24675324675324675,0.24836600832684347,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v2,deepseek-chat
+0.2137096688020295,0.24675324675324675,0.22904582696250345,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v2,deepseek-chat
+0.29365079365079366,0.24025974025974026,0.26428571428571435,re,docred,dev,entities_separately,20,re_entities_separately,v3,deepseek-chat
+0.2737642585551331,0.12286689419795221,0.1696113074204947,evi,docred,dev,entities_separately,20,re_entities_separately,v3,deepseek-chat
+0.26748970092634977,0.24025974025974026,0.2531445664089527,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v3,deepseek-chat
+0.23275861065695644,0.24025974025974026,0.23644969896530246,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v3,deepseek-chat
+0.2903225806451613,0.262987012987013,0.27597955706984667,re,docred,dev,entities_separately,20,re_entities_separately,v4,deepseek-chat
+0.2534246575342466,0.12627986348122866,0.16856492027334852,evi,docred,dev,entities_separately,20,re_entities_separately,v4,deepseek-chat
+0.26666665679012386,0.262987012987013,0.26481405316034645,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v4,deepseek-chat
+0.23255813052100271,0.262987012987013,0.24683833104934108,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v4,deepseek-chat
+0.23696682464454977,0.16233766233766234,0.19267822736030826,re,docred,dev,entities_separately,20,re_entities_separately,v5,deepseek-chat
+0.19457013574660634,0.07337883959044368,0.10656753407682774,evi,docred,dev,entities_separately,20,re_entities_separately,v5,deepseek-chat
+0.23333332222222275,0.16233766233766234,0.19146607941024385,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v5,deepseek-chat
+0.2184465913375441,0.16233766233766234,0.18625827429101252,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v5,deepseek-chat
+0.24731182795698925,0.2987012987012987,0.27058823529411763,re,docred,dev,entities_separately,20,re_entities_separately,v6,deepseek-chat
+0.19239373601789708,0.14675767918088736,0.16650532429816067,evi,docred,dev,entities_separately,20,re_entities_separately,v6,deepseek-chat
+0.22437672508651732,0.2987012987012987,0.2562585929202561,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v6,deepseek-chat
+0.18367346403284363,0.2987012987012987,0.22747252336588067,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v6,deepseek-chat
+0.2981366459627329,0.3116883116883117,0.30476190476190473,re,docred,dev,entities_separately,20,re_entities_separately,v7,deepseek-chat
+0.25287356321839083,0.15017064846416384,0.18843683083511778,evi,docred,dev,entities_separately,20,re_entities_separately,v7,deepseek-chat
+0.2614378999530098,0.3116883116883117,0.284360184519665,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v7,deepseek-chat
+0.20701753659587593,0.3116883116883117,0.2487920530870515,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v7,deepseek-chat
+0.27155172413793105,0.20454545454545456,0.23333333333333334,re,docred,dev,entities_separately,20,re_entities_separately,v1,deepseek-reasoner
+0.26609442060085836,0.10580204778156997,0.15140415140415142,evi,docred,dev,entities_separately,20,re_entities_separately,v1,deepseek-reasoner
+0.248888877827161,0.20454545454545456,0.22454889280253945,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v1,deepseek-reasoner
+0.21395347842076845,0.20454545454545456,0.20914371840794782,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v1,deepseek-reasoner
+0.2862903225806452,0.2305194805194805,0.25539568345323743,re,docred,dev,entities_separately,20,re_entities_separately,v2,deepseek-reasoner
+0.272,0.11604095563139932,0.1626794258373206,evi,docred,dev,entities_separately,20,re_entities_separately,v2,deepseek-reasoner
+0.26859503022334585,0.2305194805194805,0.24810493585951013,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v2,deepseek-reasoner
+0.23376622364648383,0.2305194805194805,0.23213149986942253,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v2,deepseek-reasoner
+0.32558139534883723,0.22727272727272727,0.2676864244741874,re,docred,dev,entities_separately,20,re_entities_separately,v3,deepseek-reasoner
+0.3073394495412844,0.11433447098976109,0.16666666666666666,evi,docred,dev,entities_separately,20,re_entities_separately,v3,deepseek-reasoner
+0.30288460082285573,0.22727272727272727,0.2596867217706776,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v3,deepseek-reasoner
+0.26020406835693527,0.22727272727272727,0.24262606463781958,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v3,deepseek-reasoner
+0.348,0.2824675324675325,0.31182795698924737,re,docred,dev,entities_separately,20,re_entities_separately,v4,deepseek-reasoner
+0.33852140077821014,0.14846416382252559,0.2064056939501779,evi,docred,dev,entities_separately,20,re_entities_separately,v4,deepseek-reasoner
+0.30341879045218845,0.2824675324675325,0.2925685536272761,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v4,deepseek-reasoner
+0.2590908973140501,0.2824675324675325,0.27027468293168266,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v4,deepseek-reasoner
+0.2599118942731278,0.19155844155844157,0.22056074766355138,re,docred,dev,entities_separately,20,re_entities_separately,v5,deepseek-reasoner
+0.2565217391304348,0.10068259385665529,0.1446078431372549,evi,docred,dev,entities_separately,20,re_entities_separately,v5,deepseek-reasoner
+0.24663676024050402,0.19155844155844157,0.21563610568411132,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v5,deepseek-reasoner
+0.21860464099513296,0.19155844155844157,0.20418982657221763,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v5,deepseek-reasoner
+0.33587786259541985,0.2857142857142857,0.3087719298245614,re,docred,dev,entities_separately,20,re_entities_separately,v6,deepseek-reasoner
+0.3161764705882353,0.14675767918088736,0.20046620046620045,evi,docred,dev,entities_separately,20,re_entities_separately,v6,deepseek-reasoner
+0.30120480718052983,0.2857142857142857,0.2932551262315713,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v6,deepseek-reasoner
+0.24347825028355433,0.2857142857142857,0.26291079195045086,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v6,deepseek-reasoner
+0.32646048109965636,0.30844155844155846,0.31719532554257096,re,docred,dev,entities_separately,20,re_entities_separately,v7,deepseek-reasoner
+0.29900332225913623,0.15358361774744028,0.20293122886133033,evi,docred,dev,entities_separately,20,re_entities_separately,v7,deepseek-reasoner
+0.2872727168264467,0.30844155844155846,0.29748101784475955,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v7,deepseek-reasoner
+0.24615383668639093,0.30844155844155846,0.2737998680512052,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v7,deepseek-reasoner
+0.15384615384615385,0.025974025974025976,0.04444444444444445,re,docred,dev,entities_separately,20,re_entities_separately,v1,gpt-4o-mini
+0.11666666666666667,0.011945392491467578,0.021671826625386997,evi,docred,dev,entities_separately,20,re_entities_separately,v1,gpt-4o-mini
+0.1538461242603607,0.025974025974025976,0.044444443209876575,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v1,gpt-4o-mini
+0.1538461242603607,0.025974025974025976,0.044444443209876575,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v1,gpt-4o-mini
+0.17307692307692307,0.05844155844155844,0.08737864077669903,re,docred,dev,entities_separately,20,re_entities_separately,v2,gpt-4o-mini
+0.1619047619047619,0.02901023890784983,0.0492040520984081,evi,docred,dev,entities_separately,20,re_entities_separately,v2,gpt-4o-mini
+0.17307690643491283,0.05844155844155844,0.08737863865585828,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v2,gpt-4o-mini
+0.16504852766519149,0.05844155844155844,0.08631875662378333,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v2,gpt-4o-mini
+0.22105263157894736,0.06818181818181818,0.10421836228287841,re,docred,dev,entities_separately,20,re_entities_separately,v3,gpt-4o-mini
+0.09202453987730061,0.025597269624573378,0.04005340453938585,evi,docred,dev,entities_separately,20,re_entities_separately,v3,gpt-4o-mini
+0.2127659348121346,0.06818181818181818,0.10327022108596674,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v3,gpt-4o-mini
+0.18681316628426745,0.06818181818181818,0.09990205387163408,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v3,gpt-4o-mini
+0.18705035971223022,0.08441558441558442,0.116331096196868,re,docred,dev,entities_separately,20,re_entities_separately,v4,gpt-4o-mini
+0.11564625850340136,0.02901023890784983,0.04638472032742155,evi,docred,dev,entities_separately,20,re_entities_separately,v4,gpt-4o-mini
+0.18115940716236179,0.08441558441558442,0.11516654589446298,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v4,gpt-4o-mini
+0.16296295089163326,0.08441558441558442,0.11121912999057225,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v4,gpt-4o-mini
+0.0,0.0,0.0,re,docred,dev,entities_separately,20,re_entities_separately,v5,gpt-4o-mini
+0.0,0.0,0.0,evi,docred,dev,entities_separately,20,re_entities_separately,v5,gpt-4o-mini
+0.0,0.0,0.0,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v5,gpt-4o-mini
+0.0,0.0,0.0,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v5,gpt-4o-mini
+0.20253164556962025,0.1038961038961039,0.13733905579399142,re,docred,dev,entities_separately,20,re_entities_separately,v6,gpt-4o-mini
+0.11440677966101695,0.04607508532423208,0.06569343065693431,evi,docred,dev,entities_separately,20,re_entities_separately,v6,gpt-4o-mini
+0.20253163275116248,0.1038961038961039,0.13733905284680145,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v6,gpt-4o-mini
+0.18181817001180714,0.1038961038961039,0.13223140183633056,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v6,gpt-4o-mini
+0.2214765100671141,0.10714285714285714,0.14442013129102843,re,docred,dev,entities_separately,20,re_entities_separately,v7,gpt-4o-mini
+0.18125,0.04948805460750853,0.0777479892761394,evi,docred,dev,entities_separately,20,re_entities_separately,v7,gpt-4o-mini
+0.2214764952029198,0.10714285714285714,0.1444201281308506,re_ignore_train_annotated (used officially),docred,dev,entities_separately,20,re_entities_separately,v7,gpt-4o-mini
+0.19444443094135896,0.10714285714285714,0.1381578913283415,re_ignore_train,docred,dev,entities_separately,20,re_entities_separately,v7,gpt-4o-mini
+0.37037037037037035,0.12269938650306748,0.18433179723502305,re,redocred,test,entities_separately,20,re_entities_separately,v1,deepseek-chat
+0.1712962962962963,0.0710172744721689,0.10040705563093623,evi,redocred,test,entities_separately,20,re_entities_separately,v1,deepseek-chat
+0.3644859642763568,0.12269938650306748,0.18359420756038358,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v1,deepseek-chat
+0.3096446543327587,0.12269938650306748,0.17575451738450595,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v1,deepseek-chat
+0.41694915254237286,0.18865030674846625,0.25976768743400214,re,redocred,test,entities_separately,20,re_entities_separately,v2,deepseek-chat
+0.17857142857142858,0.10556621880998081,0.13268998793727382,evi,redocred,test,entities_separately,20,re_entities_separately,v2,deepseek-chat
+0.39649121415820304,0.18865030674846625,0.2556584569767601,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v2,deepseek-chat
+0.3384615254437875,0.18865030674846625,0.24226688417131173,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v2,deepseek-chat
+0.4596774193548387,0.17484662576687116,0.25333333333333335,re,redocred,test,entities_separately,20,re_entities_separately,v3,deepseek-chat
+0.1889763779527559,0.09213051823416507,0.1238709677419355,evi,redocred,test,entities_separately,20,re_entities_separately,v3,deepseek-chat
+0.4416666482638896,0.17484662576687116,0.25051828213791727,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v3,deepseek-chat
+0.40178569634885286,0.17484662576687116,0.24365915885613848,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v3,deepseek-chat
+0.5210355987055016,0.2469325153374233,0.3350676378772112,re,redocred,test,entities_separately,20,re_entities_separately,v4,deepseek-chat
+0.2523364485981308,0.15547024952015356,0.19239904988123513,evi,redocred,test,entities_separately,20,re_entities_separately,v4,deepseek-chat
+0.5033556878068561,0.2469325153374233,0.33132571078328416,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v4,deepseek-chat
+0.43295017498275196,0.2469325153374233,0.31449388915585397,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v4,deepseek-chat
+0.4623115577889447,0.1411042944785276,0.21621621621621623,re,redocred,test,entities_separately,20,re_entities_separately,v5,deepseek-chat
+0.2102803738317757,0.08637236084452975,0.12244897959183673,evi,redocred,test,entities_separately,20,re_entities_separately,v5,deepseek-chat
+0.4512820281393832,0.1411042944785276,0.21498751662610177,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v5,deepseek-chat
+0.3815028681212215,0.1411042944785276,0.20601207522679124,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v5,deepseek-chat
+0.4642857142857143,0.299079754601227,0.3638059701492537,re,redocred,test,entities_separately,20,re_entities_separately,v6,deepseek-chat
+0.18200836820083682,0.16698656429942418,0.17417417417417416,evi,redocred,test,entities_separately,20,re_entities_separately,v6,deepseek-chat
+0.4471744361873603,0.299079754601227,0.35843234728780593,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v6,deepseek-chat
+0.39353098669727804,0.299079754601227,0.3398652198455435,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v6,deepseek-chat
+0.4945054945054945,0.27607361963190186,0.35433070866141736,re,redocred,test,entities_separately,20,re_entities_separately,v7,deepseek-chat
+0.19426048565121412,0.1689059500959693,0.18069815195071867,evi,redocred,test,entities_separately,20,re_entities_separately,v7,deepseek-chat
+0.4816901272763345,0.27607361963190186,0.3509852180728118,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v7,deepseek-chat
+0.426791263962889,0.27607361963190186,0.33527300003064914,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v7,deepseek-chat
+0.461864406779661,0.16717791411042945,0.2454954954954955,re,redocred,test,entities_separately,20,re_entities_separately,v1,deepseek-reasoner
+0.288135593220339,0.13051823416506717,0.17965653896961692,evi,redocred,test,entities_separately,20,re_entities_separately,v1,deepseek-reasoner
+0.44782606748582315,0.16717791411042945,0.24346713220372593,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v1,deepseek-reasoner
+0.3864734112814777,0.16717791411042945,0.2333953367182672,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v1,deepseek-reasoner
+0.46236559139784944,0.19785276073619631,0.2771213748657358,re,redocred,test,entities_separately,20,re_entities_separately,v2,deepseek-reasoner
+0.30357142857142855,0.16314779270633398,0.21223470661672908,evi,redocred,test,entities_separately,20,re_entities_separately,v2,deepseek-reasoner
+0.4339622477750096,0.19785276073619631,0.27179040580213787,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v2,deepseek-reasoner
+0.3534482606272301,0.19785276073619631,0.25369339592209705,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v2,deepseek-reasoner
+0.5066079295154186,0.17638036809815952,0.2616609783845279,re,redocred,test,entities_separately,20,re_entities_separately,v3,deepseek-reasoner
+0.3146551724137931,0.1401151631477927,0.19389110225763614,evi,redocred,test,entities_separately,20,re_entities_separately,v3,deepseek-reasoner
+0.4862385098055729,0.17638036809815952,0.25886050096951035,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v3,deepseek-reasoner
+0.41968909742543536,0.17638036809815952,0.24837681435554898,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v3,deepseek-reasoner
+0.5399239543726235,0.21779141104294478,0.3103825136612022,re,redocred,test,entities_separately,20,re_entities_separately,v4,deepseek-reasoner
+0.31716417910447764,0.16314779270633398,0.21546261089987326,evi,redocred,test,entities_separately,20,re_entities_separately,v4,deepseek-reasoner
+0.5140562042547709,0.21779141104294478,0.305957206773114,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v4,deepseek-reasoner
+0.43981479445301874,0.21779141104294478,0.2913229342452537,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v4,deepseek-reasoner
+0.42731277533039647,0.14877300613496933,0.22070534698521044,re,redocred,test,entities_separately,20,re_entities_separately,v5,deepseek-reasoner
+0.27705627705627706,0.12284069097888675,0.1702127659574468,evi,redocred,test,entities_separately,20,re_entities_separately,v5,deepseek-reasoner
+0.41441439574709926,0.14877300613496933,0.21894550636206553,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v5,deepseek-reasoner
+0.346733650917907,0.14877300613496933,0.20820954407361436,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v5,deepseek-reasoner
+0.4681647940074906,0.19171779141104295,0.27203482045701854,re,redocred,test,entities_separately,20,re_entities_separately,v6,deepseek-reasoner
+0.2757352941176471,0.14395393474088292,0.18915510718789408,evi,redocred,test,entities_separately,20,re_entities_separately,v6,deepseek-reasoner
+0.44094486452972975,0.19171779141104295,0.26724186979544223,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v6,deepseek-reasoner
+0.3799126471653866,0.19171779141104295,0.25483602246605086,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v6,deepseek-reasoner
+0.5627240143369175,0.24079754601226994,0.3372717508055854,re,redocred,test,entities_separately,20,re_entities_separately,v7,deepseek-reasoner
+0.3194444444444444,0.1765834932821497,0.22744128553770085,evi,redocred,test,entities_separately,20,re_entities_separately,v7,deepseek-reasoner
+0.5343511246430869,0.24079754601226994,0.3319890606641079,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v7,deepseek-reasoner
+0.4529147778961983,0.24079754601226994,0.314426494416688,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v7,deepseek-reasoner
+0.23214285714285715,0.019938650306748466,0.03672316384180791,re,redocred,test,entities_separately,20,re_entities_separately,v1,gpt-4o-mini
+0.15873015873015872,0.019193857965451054,0.034246575342465745,evi,redocred,test,entities_separately,20,re_entities_separately,v1,gpt-4o-mini
+0.2181817785124039,0.019938650306748466,0.03653823577117102,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v1,gpt-4o-mini
+0.1730768897929058,0.019938650306748466,0.035757945499918564,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v1,gpt-4o-mini
+0.2608695652173913,0.03680981595092025,0.06451612903225806,re,redocred,test,entities_separately,20,re_entities_separately,v2,gpt-4o-mini
+0.08163265306122448,0.015355086372360844,0.025848142164781908,evi,redocred,test,entities_separately,20,re_entities_separately,v2,gpt-4o-mini
+0.26086953686200687,0.03680981595092025,0.06451612816510581,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v2,gpt-4o-mini
+0.2183907794953127,0.03680981595092025,0.06300082791377462,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v2,gpt-4o-mini
+0.3181818181818182,0.04294478527607362,0.07567567567567568,re,redocred,test,entities_separately,20,re_entities_separately,v3,gpt-4o-mini
+0.12745098039215685,0.02495201535508637,0.04173354735152488,evi,redocred,test,entities_separately,20,re_entities_separately,v3,gpt-4o-mini
+0.29411761245675144,0.04294478527607362,0.07494646568602728,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v3,gpt-4o-mini
+0.23076920118343575,0.04294478527607362,0.07241379164684901,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v3,gpt-4o-mini
+0.32558139534883723,0.06441717791411043,0.10755441741357234,re,redocred,test,entities_separately,20,re_entities_separately,v4,gpt-4o-mini
+0.17073170731707318,0.04030710172744722,0.06521739130434782,evi,redocred,test,entities_separately,20,re_entities_separately,v4,gpt-4o-mini
+0.3149606051212122,0.06441717791411043,0.10695867941291637,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v4,gpt-4o-mini
+0.29838707271071996,0.06441717791411043,0.10595936027195788,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v4,gpt-4o-mini
+0.0,0.0,0.0,re,redocred,test,entities_separately,20,re_entities_separately,v5,gpt-4o-mini
+0.0,0.0,0.0,evi,redocred,test,entities_separately,20,re_entities_separately,v5,gpt-4o-mini
+0.0,0.0,0.0,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v5,gpt-4o-mini
+0.0,0.0,0.0,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v5,gpt-4o-mini
+0.27485380116959063,0.07208588957055215,0.11421628189550426,re,redocred,test,entities_separately,20,re_entities_separately,v6,gpt-4o-mini
+0.12105263157894737,0.044145873320537425,0.06469760900140648,evi,redocred,test,entities_separately,20,re_entities_separately,v6,gpt-4o-mini
+0.2748537850962699,0.07208588957055215,0.1142162805077001,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v6,gpt-4o-mini
+0.2530120329510823,0.07208588957055215,0.11220371588882662,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v6,gpt-4o-mini
+0.26256983240223464,0.07208588957055215,0.11311672683513838,re,redocred,test,entities_separately,20,re_entities_separately,v7,gpt-4o-mini
+0.10824742268041238,0.04030710172744722,0.05874125874125874,evi,redocred,test,entities_separately,20,re_entities_separately,v7,gpt-4o-mini
+0.2625698177335297,0.07208588957055215,0.11311672547392629,re_ignore_train_annotated (used officially),redocred,test,entities_separately,20,re_entities_separately,v7,gpt-4o-mini
+0.24571427167347018,0.07208588957055215,0.11146962156612554,re_ignore_train,redocred,test,entities_separately,20,re_entities_separately,v7,gpt-4o-mini

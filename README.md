@@ -45,7 +45,7 @@ which are predictions from fine-tuned wikineural model.
 - fill_redocred_predictions_from_docred -> my approach was to calculate first results on docred dev set and then fill
   responses for redocred using this script. Only 2 documents are missing with such approach and need to be filled by
   querying API.
--
+
 
 ## RE extraction DREEAM.
 
@@ -75,8 +75,7 @@ RE_descirpitons contains property_dict which is mine extedsion of relation_descr
 
 in LLMs_via_API/minimal subset examples we solve https://en.wikipedia.org/wiki/Set_cover_problem with greedy
 estimation - this gives us which docs to use to cover as many relations as possible - relations weighted per occurrences
-during
-selection
+during selection
 
 
 

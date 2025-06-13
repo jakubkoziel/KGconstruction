@@ -37,8 +37,14 @@ def adjust_relations(predicted_triplets, truth, predicted_docs, scores):
             single_result['t_idx'] = single_result['t']
         doc_true = find_document_by_title(single_result['title'], truth)
         doc_predicted = find_document_by_title(single_result['title'], predicted_docs)
-        new_h = remap_entity_to_true(single_result['h_idx'], doc_true, doc_predicted)
-        new_t = remap_entity_to_true(single_result['t_idx'], doc_true, doc_predicted)
+
+        try:
+            new_h = remap_entity_to_true(single_result['h_idx'], doc_true, doc_predicted)
+            new_t = remap_entity_to_true(single_result['t_idx'], doc_true, doc_predicted)
+        except IndexError as e:
+            print(f'Error remapping entities for {single_result}: {e}')
+            continue
+
         if single_result['r'] == "Na":
             raise Exception('Na relation can be found in the results, adjust the code.')
 
