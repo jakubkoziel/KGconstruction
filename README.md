@@ -1,5 +1,15 @@
 # KGconstruction
 
+This repository contains the source code and experiments related to the Master's diploma thesis:
+
+**"Knowledge graph construction based on text data"**  
+Author: Jakub Kozieł  
+Supervisors: Anna Wróblewska, Ph.D. · Daniel Dan, Ph.D.  
+Faculty of Mathematics and Information Science  
+Warsaw University of Technology  
+
+Conducted in collaboration with [APA – Austria Press Agency](https://apa.at/).
+
 ## NER with pretrained models
 
 ### Repository structure (which files can be used directly)
