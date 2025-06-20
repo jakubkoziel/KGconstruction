@@ -4,7 +4,8 @@ This repository contains the source code and experiments related to the Master's
 
 **"Knowledge graph construction based on text data"**  
 Author: Jakub Kozieł  
-Supervisors: Anna Wróblewska, Ph.D. · Daniel Dan, Ph.D.  
+Supervisor: Anna Wróblewska, Ph.D.  
+Advisor: Daniel Dan, Ph.D.  
 Faculty of Mathematics and Information Science  
 Warsaw University of Technology  
 
